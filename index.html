@@ -52,6 +52,11 @@
     /* Type */
     --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    /* One type scale for the whole page: 12 / 14 / 16 / 20, weights 400 and 500 */
+    --fs-xs: 12px;                        /* tags, tooltips, small buttons, section labels */
+    --fs-sm: 14px;                        /* secondary text, descriptions, chips, View pill */
+    --fs-md: 16px;                        /* body text, nav, names */
+    --fs-lg: 20px;                        /* project titles, sheet titles, contact lines */
 
     /* Measure */
     --col: 722px;                         /* 640px of content + two 40px gutters + the two rules */
@@ -157,10 +162,10 @@
     background: conic-gradient(from 0deg at 50% 0, transparent 0deg 104deg, #e2d8ff 112deg, #b4b0ff 124deg, #5aa8ff 136deg, #a58bff 150deg, #ff7fb5 164deg, #ffa13d 176deg, #34e0ff 192deg, #45e3c1 204deg, #8fe36f 216deg, #f6e56b 232deg, transparent 250deg 360deg);
     filter: blur(24px) brightness(var(--aurora-light)) saturate(var(--aurora-sat)); animation: aurora-sway 14s ease-in-out infinite alternate; }
   .hero__top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-  .hero__name { font-size: 16px; font-weight: 500; line-height: 24px; color: var(--ink); }
-  .hero__role { font-size: 16px; line-height: 24px; color: var(--soft); }
+  .hero__name { font-size: var(--fs-md); font-weight: 500; line-height: 24px; color: var(--ink); }
+  .hero__role { font-size: var(--fs-md); line-height: 24px; color: var(--soft); text-wrap: balance; }
   .hero__copy { display: grid; gap: 20px; max-width: 520px; margin-top: 56px; }
-  .hero__copy p { font-size: 16px; line-height: 26px; color: var(--soft); text-wrap: pretty; }
+  .hero__copy p { font-size: var(--fs-md); line-height: 26px; color: var(--soft); text-wrap: pretty; }
   .hero__copy a { color: var(--link); transition: opacity .2s; }
   .hero__copy a:hover { opacity: .72; }
   /* theme switch: a sun and a moon; the chosen one sits in a small filled circle and turns as it switches on */
@@ -174,6 +179,17 @@
   .tbtn[data-t="dark"][aria-checked="true"] svg { transform: rotate(-15deg); }
   .tbtn:not([aria-checked="true"]):hover { color: var(--ink); }
   .tbtn:focus-visible { border-radius: 50%; outline-offset: 2px; }
+  /* sound switch: a speaker beside the sun and moon; the icon shows sound waves while the click sounds are on */
+  .tools { display: flex; align-items: center; gap: 8px; }
+  .tools__sep { width: 1px; height: 14px; background: var(--rule); }
+  .sbtn { position: relative; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: var(--dot); transition: color .3s; -webkit-tap-highlight-color: transparent; }
+  .sbtn svg { position: relative; grid-area: 1 / 1; width: 14px; height: 14px; }
+  .sbtn .s-on { display: none; }
+  .sbtn[aria-pressed="true"] { color: var(--ink); }
+  .sbtn[aria-pressed="true"] .s-on { display: block; }
+  .sbtn[aria-pressed="true"] .s-off { display: none; }
+  .sbtn[aria-pressed="false"]:hover { color: var(--ink); }
+  .sbtn:focus-visible { border-radius: 50%; outline-offset: 2px; }
   /* the hero fades up once the preloader lifts (and shows anyway after 12s if the script stalls) */
   .js .hero .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease var(--d, 0s), transform .7s cubic-bezier(.2, .8, .2, 1) var(--d, 0s); animation: reveal-anyway 0s linear 12s forwards; }
   .js.ready .hero .reveal { opacity: 1; transform: none; }
@@ -181,7 +197,7 @@
   /* ---------- Navigation: a pill in the hero, and a floating pill with the name once it scrolls away ---------- */
   .hero__nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; max-width: 520px; margin-top: 36px; }
   .pill { display: inline-flex; align-items: center; gap: 20px; height: 40px; padding-inline: 20px; border-radius: 999px; background: var(--pill); }
-  .pill .roll, .dock .roll { font-size: 16px; color: var(--ink); }
+  .pill .roll, .dock .roll { font-size: var(--fs-md); color: var(--ink); }
   .roll { --roll-h: 22px; display: inline-block; line-height: var(--roll-h); }
   .roll__clip { display: inline-flex; flex-direction: column; height: var(--roll-h); overflow: hidden; vertical-align: top; }
   .roll__clip > span { display: block; line-height: var(--roll-h); white-space: nowrap; transition: transform .45s cubic-bezier(.65, 0, .35, 1); }
@@ -190,11 +206,11 @@
   .socials a, .socials button { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--muted); transition: color .2s; }
   .socials a:hover, .socials button:hover { color: var(--ink); }
   .socials svg { width: 22px; height: 22px; }
-  .socials__tip { position: absolute; top: calc(100% + 4px); left: 50%; padding: 6px 10px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 12px; line-height: 1; white-space: nowrap; opacity: 0; transform: translate(-50%, 4px); transition: opacity .2s, transform .2s; pointer-events: none; }
+  .socials__tip { position: absolute; top: calc(100% + 4px); left: 50%; padding: 6px 10px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: var(--fs-xs); line-height: 1; white-space: nowrap; opacity: 0; transform: translate(-50%, 4px); transition: opacity .2s, transform .2s; pointer-events: none; }
   .is-said .socials__tip { opacity: 1; transform: translate(-50%, 0); }
   .dock { position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 50%; z-index: 20; display: flex; align-items: center; gap: 22px; height: 46px; padding-inline: 22px; border: 1px solid var(--pill-edge); border-radius: 999px; background: var(--bar); box-shadow: 0 10px 30px var(--shade); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4); opacity: 0; visibility: hidden; transform: translate(-50%, -18px) scale(.94); transition: opacity .3s ease, transform .55s cubic-bezier(.2, .9, .3, 1.15), visibility 0s .55s; }
   .dock.is-on { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); transition-delay: 0s; }
-  .dock__name { font-size: 20px; font-weight: 700; letter-spacing: -.05em; color: var(--ink); white-space: nowrap; }
+  .dock__name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -.05em; color: var(--ink); white-space: nowrap; }
   .dock__links { display: flex; align-items: center; gap: 18px; }
   #work, #contact { scroll-margin-top: 96px; }
 
@@ -205,7 +221,7 @@
   .wide { padding-inline: var(--edge); }
   .work > .wide { padding-block: clamp(64px, 7vw, 104px); }
   .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .projs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(44px, 4.6vw, 72px) clamp(16px, 2.4vw, 36px); max-width: min(1240px, 78vw); margin-inline: auto; }
+  .projs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(40px, 4vw, 56px) clamp(16px, 2vw, 28px); max-width: min(940px, 72vw); margin-inline: auto; }
   .projs > li { min-width: 0; container-type: inline-size; }
   .proj { --radius: clamp(18px, 3.7cqw, 28px); display: block; width: 100%; -webkit-tap-highlight-color: transparent; }
   .proj:focus-visible { border-radius: var(--radius); outline-offset: 6px; }
@@ -229,10 +245,10 @@
   .laptop::before { content: ""; position: absolute; top: 1.5cqw; left: 50%; z-index: 1; width: 7.5cqw; height: 1.9cqw; border-radius: 0 0 1cqw 1cqw; background: #0e0f12; transform: translateX(-50%); }
   .laptop__screen { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 1.6cqw 1.6cqw 0 0; background: #f4f6fb; }
   /* under the panel: tags, title, one line */
-  .proj__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: clamp(16px, 2.6cqw, 22px); }
-  .proj__tags > span { display: inline-flex; align-items: center; height: 2.2em; padding-inline: .9em; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: clamp(13px, 2.1cqw, 16px); font-weight: 500; letter-spacing: -.01em; white-space: nowrap; transition: background-color .35s, color .35s; }
-  .proj__title { display: block; margin-top: clamp(14px, 2.6cqw, 22px); font-size: clamp(22px, 4.4cqw, 34px); font-weight: 400; line-height: 1.15; letter-spacing: -.025em; color: var(--ink); text-wrap: balance; }
-  .proj__desc { display: block; margin-top: clamp(6px, 1.3cqw, 10px); font-size: clamp(15px, 2.6cqw, 20px); line-height: 1.45; color: var(--sub); text-wrap: pretty; }
+  .proj__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .proj__tags > span { display: inline-flex; align-items: center; height: 2.2em; padding-inline: .9em; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: var(--fs-xs); font-weight: 500; letter-spacing: 0; white-space: nowrap; transition: background-color .35s, color .35s; }
+  .proj__title { display: block; margin-top: 12px; font-size: var(--fs-lg); font-weight: 500; line-height: 28px; letter-spacing: -.01em; color: var(--ink); text-wrap: balance; }
+  .proj__desc { display: block; margin-top: 4px; font-size: var(--fs-sm); line-height: 20px; color: var(--sub); text-wrap: pretty; }
   @container (max-width: 440px) {
     .proj__media { aspect-ratio: 3 / 2; }
     .proj__device--phone { top: 5cqw; width: 40cqw; }
@@ -241,18 +257,18 @@
 
   /* "View" pill that follows the mouse over a project image */
   .cursor { position: fixed; top: 0; left: 0; z-index: 40; pointer-events: none; }
-  .cursor__pill { display: inline-flex; align-items: center; height: 46px; padding-inline: 22px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 16px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; box-shadow: 0 10px 24px var(--shade-deep); opacity: 0; transform: translate(-50%, -50%) scale(.5); transition: transform .22s cubic-bezier(.2, .8, .2, 1), opacity .16s; }
+  .cursor__pill { display: inline-flex; align-items: center; height: 32px; padding-inline: 14px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: var(--fs-sm); font-weight: 500; letter-spacing: 0; white-space: nowrap; box-shadow: 0 6px 16px var(--shade-deep); opacity: 0; transform: translate(-50%, -50%) scale(.5); transition: transform .22s cubic-bezier(.2, .8, .2, 1), opacity .16s; }
   .cursor.is-on .cursor__pill { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   .cursor-ready .proj__media { cursor: none; }
 
   /* ---------- Contact ---------- */
-  .contact__lead { font-size: 20px; font-weight: 500; line-height: 27px; }
+  .contact__lead { font-size: var(--fs-lg); font-weight: 500; line-height: 28px; }
   .contact__mail { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 38px; }
-  .contact__email { font-size: 20px; font-weight: 500; line-height: 28px; color: var(--accent); overflow-wrap: anywhere; }
-  .copy { height: 28px; padding-inline: 11px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; line-height: 1; color: var(--muted); transition: color .2s, border-color .2s; }
+  .contact__email { font-size: var(--fs-lg); font-weight: 500; line-height: 28px; color: var(--accent); overflow-wrap: anywhere; }
+  .copy { height: 28px; padding-inline: 11px; border: 1px solid var(--line); border-radius: 999px; font-size: var(--fs-xs); line-height: 1; color: var(--muted); transition: color .2s, border-color .2s; }
   .copy:hover { color: var(--ink); border-color: var(--rule); }
   .contact__links { display: flex; gap: 40px; margin-top: 29px; }
-  .contact__links a, .contact__links button { display: block; padding-block: 6px; font-size: 14px; line-height: 20px; color: var(--muted); transition: color .2s; }
+  .contact__links a, .contact__links button { display: block; padding-block: 6px; font-size: var(--fs-sm); line-height: 20px; color: var(--muted); transition: color .2s; }
   .contact__links a:hover, .contact__links button:hover { color: var(--ink); }
 
   /* ---------- Footer birds: three low-poly birds that watch the cursor (scene drawn by the script) ---------- */
@@ -264,11 +280,11 @@
   .critter[data-critter="0"] { --tip: var(--bird-blue); }
   .critter[data-critter="1"] { --tip: var(--bird-yellow); }
   .critter[data-critter="2"] { --tip: var(--bird-black); }
-  .critter__tip { position: absolute; top: 100%; left: 50%; padding: 8px 14px; border-radius: 999px; background: var(--tip); color: var(--on-accent); font-family: var(--mono); font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap; opacity: 0; transform: translate(-50%, 2px) scale(.9); transition: opacity .2s, transform .3s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .critter__tip { position: absolute; top: 100%; left: 50%; padding: 8px 14px; border-radius: 999px; background: var(--tip); color: var(--on-accent); font-family: var(--mono); font-size: var(--fs-xs); font-weight: 500; line-height: 1; white-space: nowrap; opacity: 0; transform: translate(-50%, 2px) scale(.9); transition: opacity .2s, transform .3s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
   .critter:hover .critter__tip, .critter:focus-visible .critter__tip, .critter.is-said .critter__tip { opacity: 1; transform: translate(-50%, 10px) scale(1); }
   .tip-short { display: none; }
   @media (hover: none) {
-    .critter__tip { padding: 6px 10px; font-size: 11px; opacity: 1; transform: translate(-50%, 10px) scale(1); }   /* no hover on touch screens, so the labels stay up */
+    .critter__tip { padding: 6px 10px; font-size: var(--fs-xs); opacity: 1; transform: translate(-50%, 10px) scale(1); }   /* no hover on touch screens, so the labels stay up */
     .tip-full { display: none; }
     .tip-short { display: inline; }
   }
@@ -283,21 +299,21 @@
   .sheet::backdrop { background: var(--veil); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); animation: fade-in .3s; }
   .sheet--wide { width: min(860px, calc(100vw - 32px)); max-height: 92vh; max-height: 92dvh; }
   .sheet__bar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 16px 0 36px; }
-  .sheet__kind { font-size: 14px; line-height: 20px; color: var(--muted); }
+  .sheet__kind { font-size: var(--fs-sm); line-height: 20px; color: var(--muted); }
   .sheet__close { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--bg); transition: background-color .2s; }
   .sheet__close:hover { background: var(--line); }
   .sheet__close:focus-visible { border-radius: 50%; outline-offset: 2px; }
   .sheet__scroll { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 12px 36px 36px; }
-  .sheet__title { font-size: 22px; font-weight: 500; line-height: 1.3; text-wrap: balance; }
-  .sheet__scroll > p { margin-top: 12px; font-size: 16px; line-height: 1.55; color: var(--body); text-wrap: pretty; }
-  .sheet__label { margin-top: 28px; font-size: 12px; font-weight: 600; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .sheet__title { font-size: var(--fs-lg); font-weight: 500; line-height: 28px; text-wrap: balance; }
+  .sheet__scroll > p { margin-top: 12px; font-size: var(--fs-md); line-height: 1.55; color: var(--body); text-wrap: pretty; }
+  .sheet__label { margin-top: 28px; font-size: var(--fs-xs); font-weight: 500; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .chips > li { display: inline-flex; align-items: center; min-height: 30px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; line-height: 20px; }
-  .sheet__scroll > .sheet__more { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+  .chips > li { display: inline-flex; align-items: center; min-height: 30px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: var(--fs-sm); line-height: 20px; }
+  .sheet__scroll > .sheet__more { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); font-size: var(--fs-sm); color: var(--muted); }
   .sheet__more a { font-weight: 500; color: var(--blue); }
   .edu { display: grid; gap: 14px; margin-top: 14px; }
-  .edu > li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 20px; color: var(--body); }
-  .edu b { display: block; font-size: 15px; font-weight: 500; color: var(--ink); }
+  .edu > li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; font-size: var(--fs-sm); line-height: 20px; color: var(--body); }
+  .edu b { display: block; font-size: var(--fs-sm); font-weight: 500; color: var(--ink); }
   .edu__when { flex: none; color: var(--muted); font-variant-numeric: tabular-nums; }
   .sheet__resume { width: max(100%, 620px); max-width: none; height: auto; border: 1px solid var(--line); border-radius: 8px; }
 
@@ -323,7 +339,7 @@
   .pl-ghost { fill: #2b2f3d; }
   .pl-ink { fill: #fff; }
   .pl-rv { fill: none; stroke: #fff; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
-  .pl-name { font-size: 18px; font-weight: 700; line-height: 1; letter-spacing: -.02em; opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
+  .pl-name { font-size: var(--fs-lg); font-weight: 700; line-height: 1; letter-spacing: -.02em; opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
   .preloader.is-full .pl-name { opacity: 1; transform: none; }
   @keyframes pl-in { to { opacity: 1; transform: none; } }
   @keyframes pl-pop { 45% { transform: scale(1.07) rotate(-2deg); } }
@@ -341,8 +357,8 @@
   }
   @media (max-width: 560px) {
     .dock { gap: 16px; height: 42px; padding-inline: 18px; }
-    .dock__name { font-size: 17px; }
-    .dock .roll { font-size: 15px; }
+    .dock__name { font-size: var(--fs-md); }
+    .dock .roll { font-size: var(--fs-sm); }
     .dock__home { display: none; }                  /* the name already goes home */
     .hero__nav { gap: 12px; }                       /* pill and icons stay on one row */
     .pill { gap: 16px; height: 38px; padding-inline: 18px; }
@@ -406,9 +422,13 @@
           <h1 class="hero__name">Harsh Dhokte</h1>
           <p class="hero__role">UI/UX designer based in Pune, India</p>
         </div>
-        <div class="theme reveal" role="radiogroup" aria-label="Colour theme">
+        <div class="tools reveal">
+          <div class="theme" role="radiogroup" aria-label="Colour theme">
           <button class="tbtn" type="button" data-t="light" role="radio" aria-checked="true" aria-label="Light theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6L6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg></button>
           <button class="tbtn" type="button" data-t="dark" role="radio" aria-checked="false" aria-label="Dark theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+          </div>
+          <span class="tools__sep" aria-hidden="true"></span>
+          <button class="sbtn" type="button" aria-pressed="false" aria-label="Click sounds" title="Turn click sounds on"><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16.5 9.5l4.5 5M21 9.5l-4.5 5"/></svg><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.4a8 8 0 0 1 0 11.2"/></svg></button>
         </div>
       </div>
 
@@ -653,6 +673,73 @@
     new MutationObserver(paintDots).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-mode'] });
     paintDots();
 
+    /* ---- Click sounds: tiny synthesized ticks (no audio files), silent until the visitor switches them on ---- */
+    /* SOUND:BEGIN */
+    const sound = { on: false };
+    let ac = null, noise = null;
+    const getAudio = () => {
+      if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); }
+      if (ac.state === 'suspended' && ac.resume) Promise.resolve(ac.resume()).catch(() => {});
+      return ac;
+    };
+    const tone = (from, to, dur, vol, at = 0) => {                      /* a short sine blip that glides from one pitch to another */
+      const c = getAudio(); if (!c) return;
+      const t = c.currentTime + at, o = c.createOscillator(), g = c.createGain();
+      o.frequency.setValueAtTime(from, t);
+      o.frequency.exponentialRampToValueAtTime(to, t + dur);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(t); o.stop(t + dur + 0.02);
+    };
+    const snap = (vol, at = 0) => {                                     /* a 30ms burst of filtered noise: the "click" in the click */
+      const c = getAudio(); if (!c) return;
+      if (!noise) {
+        noise = c.createBuffer(1, Math.floor(c.sampleRate * 0.03), c.sampleRate);
+        const d = noise.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      }
+      const t = c.currentTime + at, src = c.createBufferSource(), hp = c.createBiquadFilter(), g = c.createGain();
+      src.buffer = noise; hp.type = 'highpass'; hp.frequency.value = 2500;
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.03);
+      src.connect(hp); hp.connect(g); g.connect(c.destination);
+      src.start(t);
+    };
+    const VOICES = {
+      tick:  () => { tone(1500, 760, 0.05, 0.09); snap(0.05); },        /* buttons, links, project cards */
+      light: () => { tone(620, 980, 0.09, 0.09); snap(0.03); },         /* sun: a small rise */
+      dark:  () => { tone(520, 330, 0.1, 0.09); snap(0.03); },          /* moon: a small fall */
+      open:  () => { tone(480, 880, 0.12, 0.08); snap(0.03); },         /* a sheet opens */
+      close: () => { tone(820, 460, 0.1, 0.07); },                      /* a sheet closes */
+      on:    () => { tone(740, 740, 0.07, 0.08); tone(1110, 1110, 0.1, 0.08, 0.08); }   /* the switch itself turning on */
+    };
+    const play = (name) => { if (!sound.on) return; try { VOICES[name](); } catch (err) {} };
+    /* SOUND:END */
+
+    const sbtn = document.querySelector('.sbtn');
+    sbtn.addEventListener('click', () => {
+      sound.on = !sound.on;
+      sbtn.setAttribute('aria-pressed', String(sound.on));
+      sbtn.title = sound.on ? 'Turn click sounds off' : 'Turn click sounds on';
+      play('on');                                                       /* a confirmation chime, only when switching on */
+    });
+    const voiceFor = (el) => {
+      if (el.classList.contains('sbtn') || el.hasAttribute('data-close')) return null;   /* the switch and the sheet closers have their own sounds */
+      if (el.closest('.theme')) return el.dataset.t === 'dark' ? 'dark' : 'light';
+      if (el.hasAttribute('data-sheet')) return 'open';
+      if (el.matches('a[href^="#"]') && el.closest('dialog')) return null;               /* closes its sheet, which plays the close sound */
+      return 'tick';
+    };
+    document.addEventListener('click', (e) => {                         /* capture phase, so no other handler can swallow it */
+      if (!sound.on || !(e.target instanceof Element)) return;
+      const hit = e.target.closest('button, a[href], [role="button"], summary');
+      if (!hit || hit.disabled) return;
+      const voice = voiceFor(hit);
+      if (voice) play(voice);
+    }, true);
+
     /* ---- Preloader: the brush "h" fills while the page and fonts load, the name appears, then the sheet lifts ---- */
     const pl = document.getElementById('preloader');
     let finished = false;
@@ -715,6 +802,7 @@
     };
     document.querySelectorAll('dialog.sheet').forEach((sheet) => {
       sheet.addEventListener('click', (e) => { if (e.target === sheet) sheet.close(); }); /* a click on the backdrop */
+      sheet.addEventListener('close', () => play('close'));                               /* any way of closing: button, backdrop, Esc */
     });
 
     document.addEventListener('click', (e) => {
