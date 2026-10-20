@@ -11,7 +11,7 @@
   document.documentElement.classList.add('js');
   try { const pick = localStorage.getItem('hd-theme'); if (pick === 'dark' || pick === 'light') document.documentElement.dataset.mode = pick; } catch (err) {}
 </script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700&display=swap">
 
 <style>
   /* Layout: one 720px column ruled on both sides; a full-width hairline closes each section. */
@@ -38,8 +38,6 @@
     --bird-blue: #6f8fbf;                 /* footer bird labels */
     --bird-yellow: #b8901a;
     --bird-black: #7d7d83;
-    --aurora-light: 1;                    /* the gradient behind the hero */
-    --aurora-sat: 1;
     --bar: rgba(245, 248, 255, .74);      /* floating nav pill */
     --pill: #e8ecf5;                      /* nav pill in the hero */
     --pill-edge: rgba(255, 255, 255, .7);
@@ -47,10 +45,16 @@
     --media-edge: rgba(28, 34, 51, .05);
     --glow-a: .95;                        /* strength of the coloured glow in each panel */
     --sub: #646b7e;                       /* project descriptions */
+    --card: #ebeef6;                      /* project card surface */
+    --tag: #ffffff;                       /* soft tag pills on a card */
+    --nda-bg: #fde3ea;                    /* NDA badge: pink pill, lock and text */
+    --nda-fg: #e2336b;
+    --nda-lock: #f29ab2;
+    --note-ink: none;                     /* handwritten note: black ink as drawn */
     --accent: var(--pink);                /* each section sets its own */
 
     /* Type */
-    --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     /* One type scale for the whole page: 12 / 14 / 16 / 20, weights 400 and 500 */
     --fs-xs: 12px;                        /* tags, tooltips, small buttons, section labels */
@@ -88,8 +92,6 @@
       --bird-blue: #4d6a99;
       --bird-yellow: #8f6f12;
       --bird-black: #4a4f5c;
-      --aurora-light: .55;
-      --aurora-sat: .9;
       --bar: rgba(34, 38, 52, .74);
       --pill: #262a38;
       --pill-edge: rgba(255, 255, 255, .07);
@@ -97,6 +99,12 @@
       --media-edge: rgba(255, 255, 255, .05);
       --glow-a: .16;
       --sub: #9ea4b4;
+      --card: #222636;
+      --tag: #2e3346;
+      --nda-bg: rgba(242, 92, 140, .16);
+      --nda-fg: #f590b1;
+      --nda-lock: rgba(245, 144, 177, .5);
+      --note-ink: invert(1);
       color-scheme: dark;
     }
   }
@@ -120,8 +128,6 @@
     --bird-blue: #4d6a99;
     --bird-yellow: #8f6f12;
     --bird-black: #4a4f5c;
-    --aurora-light: .55;
-    --aurora-sat: .9;
     --bar: rgba(34, 38, 52, .74);
     --pill: #262a38;
     --pill-edge: rgba(255, 255, 255, .07);
@@ -129,6 +135,12 @@
     --media-edge: rgba(255, 255, 255, .05);
     --glow-a: .16;
     --sub: #9ea4b4;
+    --card: #222636;
+    --tag: #2e3346;
+    --nda-bg: rgba(242, 92, 140, .16);
+    --nda-fg: #f590b1;
+    --nda-lock: rgba(245, 144, 177, .5);
+    --note-ink: invert(1);
     color-scheme: dark;
   }
 
@@ -147,20 +159,16 @@
   /* ---------- The ruled column ---------- */
   .col { width: min(100%, var(--col)); margin-inline: auto; padding-inline: var(--gutter); border-inline: 1px solid var(--line); }
   .hero, .work { border-bottom: 1px solid var(--line); }
-  .hero > .col { padding-block: 112px 88px; border-inline-color: transparent; }   /* no column rules beside the hero */
+  .hero > .col { padding-block: max(112px, calc(24 * 100vw / 256 + 52px)) 56px; border-inline-color: transparent; }   /* no column rules beside the hero */
   .contact > .col { padding-block: 100px 56px; }
 
   /* ---------- Hero: name and title with the theme dots, three short lines, then links ---------- */
   .page { position: relative; }
   .page > header, .page > main { position: relative; z-index: 1; }
-  .aurora { position: absolute; top: 0; right: 0; left: 0; z-index: 0; height: 215px; overflow: hidden; pointer-events: none;
-    -webkit-mask-image: radial-gradient(ellipse 60% 100% at 50% 0%, #000 0%, rgba(0, 0, 0, .7) 38%, transparent 100%);
-            mask-image: radial-gradient(ellipse 60% 100% at 50% 0%, #000 0%, rgba(0, 0, 0, .7) 38%, transparent 100%); }
-  .js .aurora { opacity: 0; transition: opacity 2.4s ease .2s; }
-  .js.ready .aurora { opacity: 1; }
-  .aurora i { position: absolute; top: -100px; right: -25%; left: -25%; display: block; height: 360px; transform-origin: 50% 0; will-change: transform;
-    background: conic-gradient(from 0deg at 50% 0, transparent 0deg 104deg, #e2d8ff 112deg, #b4b0ff 124deg, #5aa8ff 136deg, #a58bff 150deg, #ff7fb5 164deg, #ffa13d 176deg, #34e0ff 192deg, #45e3c1 204deg, #8fe36f 216deg, #f6e56b 232deg, transparent 250deg 360deg);
-    filter: blur(24px) brightness(var(--aurora-light)) saturate(var(--aurora-sat)); animation: aurora-sway 14s ease-in-out infinite alternate; }
+  /* the pixel sakura branch across the top of the hero, drawn cell by cell by the script at the end of the page */
+  .sakura { position: absolute; top: 0; left: 0; z-index: 0; display: block; pointer-events: none; image-rendering: pixelated; }
+  .js .sakura { opacity: 0; transition: opacity 1.2s ease .2s; }
+  .js.ready .sakura { opacity: 1; }
   .hero__top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
   .hero__name { font-size: var(--fs-md); font-weight: 500; line-height: 24px; color: var(--ink); }
   .hero__role { font-size: var(--fs-md); line-height: 24px; color: var(--soft); text-wrap: balance; }
@@ -210,7 +218,7 @@
   .is-said .socials__tip { opacity: 1; transform: translate(-50%, 0); }
   .dock { position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 50%; z-index: 20; display: flex; align-items: center; gap: 22px; height: 46px; padding-inline: 22px; border: 1px solid var(--pill-edge); border-radius: 999px; background: var(--bar); box-shadow: 0 10px 30px var(--shade); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4); opacity: 0; visibility: hidden; transform: translate(-50%, -18px) scale(.94); transition: opacity .3s ease, transform .55s cubic-bezier(.2, .9, .3, 1.15), visibility 0s .55s; }
   .dock.is-on { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); transition-delay: 0s; }
-  .dock__name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -.05em; color: var(--ink); white-space: nowrap; }
+  .dock__name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; }
   .dock__links { display: flex; align-items: center; gap: 18px; }
   #work, #contact { scroll-margin-top: 96px; }
 
@@ -219,15 +227,21 @@
      then dark tag pills, the title and one line of description. Sizes inside a project use cqw, so the whole
      block scales with its column; the device frames size their own details from the device width. */
   .wide { padding-inline: var(--edge); }
-  .work > .wide { padding-block: clamp(64px, 7vw, 104px); }
+  .work > .wide { padding-block: clamp(40px, 4vw, 56px) clamp(64px, 7vw, 104px); }   /* a short gap under the hero, more room before the contact section */
   .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .work__title { max-width: min(940px, 72vw); margin: 0 auto 24px; font-size: var(--fs-md); font-weight: 500; line-height: 24px; color: var(--ink); }
   .projs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(40px, 4vw, 56px) clamp(16px, 2vw, 28px); max-width: min(940px, 72vw); margin-inline: auto; }
   .projs > li { min-width: 0; container-type: inline-size; }
-  .proj { --radius: clamp(18px, 3.7cqw, 28px); display: block; width: 100%; -webkit-tap-highlight-color: transparent; }
-  .proj:focus-visible { border-radius: var(--radius); outline-offset: 6px; }
-  .proj__media { position: relative; display: block; aspect-ratio: 7 / 4; border-radius: var(--radius); overflow: hidden; isolation: isolate;
-    background: radial-gradient(55% 80% at 0% 100%, rgb(var(--glow) / var(--glow-a)), transparent 72%), radial-gradient(55% 80% at 100% 100%, rgb(var(--glow) / var(--glow-a)), transparent 72%), var(--media);
-    box-shadow: inset 0 0 0 1px var(--media-edge); transition: background-color .35s ease; }
+  .proj { --radius: clamp(18px, 3.7cqw, 24px); display: flex; flex-direction: column; width: 100%; height: 100%; border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: inset 0 0 0 1px var(--media-edge); text-align: left; transition: background-color .35s; -webkit-tap-highlight-color: transparent; }
+  .proj:focus-visible { outline-offset: 4px; }
+  /* top of the card: title, one line, soft tags, and a round arrow */
+  .proj__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: clamp(20px, 5cqw, 28px) clamp(20px, 5cqw, 28px) 20px; }
+  .proj__text { display: block; min-width: 0; }
+  .proj__arrow { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--rule); border-radius: 50%; color: var(--muted); transition: background-color .3s, border-color .3s, color .3s; }
+  .proj__arrow svg { width: 14px; height: 14px; transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+  @media (hover: hover) { .proj:hover .proj__arrow { background: var(--ink); border-color: var(--ink); color: var(--bg); } .proj:hover .proj__arrow svg { transform: translateX(2px); } .proj:hover .proj__arrow--out svg { transform: translate(2px, -2px); } }
+  .proj__media { position: relative; display: block; margin-top: auto; aspect-ratio: 7 / 4; overflow: hidden; isolation: isolate; }   /* sits at the bottom; the card's edge crops the device */
+  .proj__head + .proj__media { margin-top: max(20px, auto); }
   .proj__device { position: absolute; right: 0; left: 0; z-index: 0; margin-inline: auto; container-type: inline-size; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
   .proj__device--phone { top: 4.2cqw; width: 34cqw; }
   .proj__device--laptop { top: 8cqw; bottom: -4cqw; width: 79cqw; }
@@ -245,21 +259,34 @@
   .laptop::before { content: ""; position: absolute; top: 1.5cqw; left: 50%; z-index: 1; width: 7.5cqw; height: 1.9cqw; border-radius: 0 0 1cqw 1cqw; background: #0e0f12; transform: translateX(-50%); }
   .laptop__screen { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 1.6cqw 1.6cqw 0 0; background: #f4f6fb; }
   /* under the panel: tags, title, one line */
-  .proj__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-  .proj__tags > span { display: inline-flex; align-items: center; height: 2.2em; padding-inline: .9em; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: var(--fs-xs); font-weight: 500; letter-spacing: 0; white-space: nowrap; transition: background-color .35s, color .35s; }
-  .proj__title { display: block; margin-top: 12px; font-size: var(--fs-lg); font-weight: 500; line-height: 28px; letter-spacing: -.01em; color: var(--ink); text-wrap: balance; }
+  .proj__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .proj__tags > span { display: inline-flex; align-items: center; height: 24px; padding-inline: 10px; border-radius: 999px; background: var(--tag); color: var(--muted); font-size: var(--fs-xs); font-weight: 500; white-space: nowrap; transition: background-color .35s, color .35s; }
+  .proj__tags > .tag-nda { gap: 5px; padding-inline: 8px 10px; background: var(--nda-bg); color: var(--nda-fg); }   /* work shared under NDA */
+  .tag-nda svg { width: 13px; height: 13px; }
+  .tag-nda .lock-body { fill: var(--nda-lock); }
+  .proj__title { display: block; font-size: var(--fs-md); font-weight: 500; line-height: 24px; color: var(--ink); text-wrap: balance; }
   .proj__desc { display: block; margin-top: 4px; font-size: var(--fs-sm); line-height: 20px; color: var(--sub); text-wrap: pretty; }
+  /* a project with a real cover: the card wears the photo's backdrop gradient (set per card as --cover-bg), and the
+     phone and hand, cut out of the photo, stand at the bottom; in dark mode the photo's colour rises as a glow (--cover-bg-dark) */
+  .proj--cover { background: var(--cover-bg); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]):not([data-mode="light"]) .proj--cover { background: var(--cover-bg-dark); } }
+  :root[data-theme="dark"]:not([data-mode="light"]) .proj--cover, :root[data-mode="dark"] .proj--cover { background: var(--cover-bg-dark); }
+  .proj__cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; transform-origin: 50% 100%; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
+  @media (hover: hover) { .proj:hover .proj__cover { transform: scale(1.03); } }
   @container (max-width: 440px) {
     .proj__media { aspect-ratio: 3 / 2; }
     .proj__device--phone { top: 5cqw; width: 40cqw; }
     .proj__device--laptop { top: 10cqw; width: 88cqw; }
   }
 
-  /* "View" pill that follows the mouse over a project image */
+  /* "View" pill that follows the mouse over a project card */
   .cursor { position: fixed; top: 0; left: 0; z-index: 40; pointer-events: none; }
   .cursor__pill { display: inline-flex; align-items: center; height: 32px; padding-inline: 14px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: var(--fs-sm); font-weight: 500; letter-spacing: 0; white-space: nowrap; box-shadow: 0 6px 16px var(--shade-deep); opacity: 0; transform: translate(-50%, -50%) scale(.5); transition: transform .22s cubic-bezier(.2, .8, .2, 1), opacity .16s; }
   .cursor.is-on .cursor__pill { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  .cursor-ready .proj__media { cursor: none; }
+  .cursor-ready .proj:not(.proj--soon) { cursor: none; }
+  /* the Coming soon card carries a handwritten note, centred */
+  .proj--soon { position: relative; }
+  .soon__note { position: absolute; top: 50%; left: 50%; width: min(62%, 320px); height: auto; filter: var(--note-ink); opacity: .86; transform: translate(-50%, -50%); pointer-events: none; }
 
   /* ---------- Contact ---------- */
   .contact__lead { font-size: var(--fs-lg); font-weight: 500; line-height: 28px; }
@@ -318,7 +345,6 @@
   .sheet__resume { width: max(100%, 620px); max-width: none; height: auto; border: 1px solid var(--line); border-radius: 8px; }
 
   /* ---------- Motion ---------- */
-  @keyframes aurora-sway { 0% { transform: rotate(-3deg) scaleX(1); } 100% { transform: rotate(3deg) scaleX(1.07); } }
   @keyframes reveal-anyway { to { opacity: 1; transform: none; } }
   @keyframes sheet-in { from { opacity: 0; transform: translateY(14px) scale(.98); } }
   @keyframes fade-in { from { opacity: 0; } }
@@ -346,14 +372,14 @@
   @keyframes pl-gone { to { visibility: hidden; } }
 
   /* ---------- Smaller screens ---------- */
-  @media (max-width: 900px) { .projs { grid-template-columns: minmax(0, 1fr); max-width: none; } }
+  @media (max-width: 900px) { .projs { grid-template-columns: minmax(0, 1fr); max-width: none; } .work__title { max-width: none; margin-bottom: 24px; } }
   @media (max-width: 760px) {
     :root { --gutter: 20px; }
     .col { border-inline: 0; }
-    .hero > .col { padding-block: 72px; }
+    .hero > .col { padding-block: calc(24 * 100vw / 150 + 36px) 48px; }
     .hero__copy { margin-top: 44px; }
-    .aurora { height: 190px; }
-    .work > .wide, .contact > .col { padding-block: 72px; }
+    .work > .wide { padding-block: 40px 72px; }
+    .contact > .col { padding-block: 72px; }
   }
   @media (max-width: 560px) {
     .dock { gap: 16px; height: 42px; padding-inline: 18px; }
@@ -375,7 +401,6 @@
     .preloader.done { opacity: 0; pointer-events: none; }
     .pl-mark { opacity: 1; transform: none; }
     .js .hero .reveal { opacity: 1; transform: none; transition: none; }
-    .aurora i { animation: none; }
     .dock, .dock.is-on { transition: opacity .2s ease, visibility 0s; }
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
@@ -411,8 +436,8 @@
     </div>
   </nav>
 
-  <!-- ===== Soft gradient behind the hero ===== -->
-  <div class="aurora" aria-hidden="true"><i></i></div>
+  <!-- ===== Pixel sakura branch over the hero ===== -->
+  <canvas class="sakura" aria-hidden="true"></canvas>
 
   <!-- ===== Hero ===== -->
   <header class="hero">
@@ -457,60 +482,62 @@
     <!-- ===== Work: four projects, two in a row, across the page ===== -->
     <section class="work" id="work" aria-labelledby="work-title">
       <div class="wide">
-        <h2 class="sr-only" id="work-title">Projects</h2>
-        <!-- Each project opens its summary sheet; once a case study is live, turn it into a link:
+        <h2 class="work__title" id="work-title">Featured projects</h2>
+        <!-- Each project opens its summary sheet, or, once its case study is live, links to it (budgeting links to Notion, care to the Figma deck).
+             To link another one:
              <a class="proj" href="https://your-case-study" target="_blank" rel="noopener"> … </a>
-             The screens are placeholders. Swap each src for a real screenshot: a web capture for the laptops
+             The benefits, budgeting and care cards show real covers: images/cover-*.webp are the phone and hand cut out of the
+             cover photo (transparent, 7:4 window), and --cover-bg on the card repeats the photo's backdrop gradient.
+             The fourth slot is a Coming soon card (.proj--soon) with the handwritten note: no link, no View pill. Swap each src for a real screenshot: a web capture for the laptops
              (the top of it shows), and a phone screenshot (for example 1179 × 2556) for the phones.
              --glow on each panel is the colour of its corner glow, as R G B. -->
         <ul class="projs" id="projects">
           <li>
-            <button class="proj" type="button" data-sheet="services" aria-haspopup="dialog">
-              <span class="proj__media" style="--glow: 214 224 255">
-                <span class="proj__device proj__device--laptop">
-                  <span class="laptop"><img class="laptop__screen" src="images/case-services.webp" width="1344" height="1610" alt="" loading="lazy"></span>
+            <button class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #fcf8fb 0%, #fcf7fa 30%, #fdf3f8 55%, #feedf5 75%, #ffe9f4 90%, #ffe5f2 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2c2739 65%, #432e48 80%, #583356 92%, #5f3559 100%)" type="button" data-sheet="benefits" aria-haspopup="dialog">
+              <span class="proj__head">
+                <span class="proj__text">
+                  <span class="proj__title">Simplifying Employee Benefits at Scale</span>
+                  <span class="proj__desc">Designed employee benefits experiences for a large enterprise, simplifying access to welfare schemes and claims for active and retired employees.</span>
+                  <span class="proj__tags"><span>Internship</span><span>Enterprise</span><span class="tag-nda" title="Shared under NDA"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect class="lock-body" x="4" y="9.5" width="16" height="12.5" rx="4.5"/><path d="M12 14.4v3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>NDA</span></span>
                 </span>
+                <span class="proj__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
               </span>
-              <span class="proj__tags"><span>DoAstra Internship</span><span>Enterprise</span></span>
-              <span class="proj__title">Enterprise Employee Services System</span>
-              <span class="proj__desc">Research and card sorting shaped an employee services platform.</span>
+              <span class="proj__media"><img class="proj__cover" src="images/cover-benefits.webp" width="1400" height="800" alt="" loading="lazy"></span>
             </button>
           </li>
           <li>
-            <button class="proj" type="button" data-sheet="benefits" aria-haspopup="dialog">
-              <span class="proj__media" style="--glow: 205 238 228">
-                <span class="proj__device proj__device--laptop">
-                  <span class="laptop"><img class="laptop__screen" src="images/case-benefits.webp" width="1344" height="1610" alt="" loading="lazy"></span>
+            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #f5f5f5 0%, #f6f6f5 10%, #f9f7f5 25%, #fbf8f5 40%, #fdfaf5 55%, #fefbf6 70%, #fff8ee 80%, #fff1dd 90%, #ffedd5 95%, #ffeacd 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2e2b35 65%, #47383a 80%, #5e4536 92%, #66493a 100%)" href="https://app.notion.com/p/UPI-Companion-App-Case-Study-2f2163fb54d18153be46f54f4cdfe8c9" target="_blank" rel="noopener">
+              <span class="proj__head">
+                <span class="proj__text">
+                  <span class="proj__title">Budgeting companion for UPI users</span>
+                  <span class="proj__desc">The app sorts UPI spending into categories and tracks savings goals.</span>
+                  <span class="sr-only">Opens the case study on Notion in a new tab.</span>
+                  <span class="proj__tags"><span>Academic Project</span><span>Fintech</span></span>
                 </span>
+                <span class="proj__arrow proj__arrow--out" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8.5 7H17v8.5"/></svg></span>
               </span>
-              <span class="proj__tags"><span>DoAstra Internship</span><span>Enterprise</span></span>
-              <span class="proj__title">Employee Benefits &amp; Trust Portal</span>
-              <span class="proj__desc">Onboarding flows simplify benefits access for active and retired employees.</span>
-            </button>
+              <span class="proj__media"><img class="proj__cover" src="images/cover-budgeting.webp" width="1400" height="800" alt="" loading="lazy"></span>
+            </a>
           </li>
           <li>
-            <button class="proj" type="button" data-sheet="budgeting" aria-haspopup="dialog">
-              <span class="proj__media" style="--glow: 226 220 255">
-                <span class="proj__device proj__device--phone">
-                  <span class="phone"><span class="phone__keys" aria-hidden="true"></span><img class="phone__screen" src="images/case-budgeting.webp" width="750" height="1624" alt="" loading="lazy"></span>
+            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #f8fbff 0%, #f6faff 30%, #f1f7ff 55%, #eaf3fe 75%, #e5f0fe 90%, #e2eefd 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #222c42 65%, #23355a 80%, #254070 92%, #26457a 100%)" href="https://www.figma.com/deck/UTStKJ5sMaTFzFlRwE1t2B/P2_Jury?node-id=238-3171&amp;viewport=-107%2C-98%2C0.51&amp;t=trLif5Ew46ILw1mb-1&amp;scaling=min-zoom&amp;content-scaling=fixed&amp;page-id=0%3A1" target="_blank" rel="noopener">
+              <span class="proj__head">
+                <span class="proj__text">
+                  <span class="proj__title">Dementia &amp; Alzheimer&#39;s care app</span>
+                  <span class="proj__desc">A shared care platform that connects families and caregivers to coordinate daily routines and ensure continuity of care.</span>
+                  <span class="sr-only">Opens the case study on Figma in a new tab.</span>
+                  <span class="proj__tags"><span>Academic Project</span><span>Health Tech</span></span>
                 </span>
+                <span class="proj__arrow proj__arrow--out" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8.5 7H17v8.5"/></svg></span>
               </span>
-              <span class="proj__tags"><span>Academic Project</span><span>Fintech</span></span>
-              <span class="proj__title">Budgeting companion for UPI users</span>
-              <span class="proj__desc">The app sorts UPI spending into categories and tracks savings goals.</span>
-            </button>
+              <span class="proj__media"><img class="proj__cover" src="images/cover-care.webp" width="1400" height="800" alt="" loading="lazy"></span>
+            </a>
           </li>
           <li>
-            <button class="proj" type="button" data-sheet="care" aria-haspopup="dialog">
-              <span class="proj__media" style="--glow: 255 222 206">
-                <span class="proj__device proj__device--phone">
-                  <span class="phone"><span class="phone__keys" aria-hidden="true"></span><img class="phone__screen" src="images/case-care.webp" width="750" height="1624" alt="" loading="lazy"></span>
-                </span>
-              </span>
-              <span class="proj__tags"><span>Academic Project</span><span>Health Tech</span></span>
-              <span class="proj__title">Dementia &amp; Alzheimer&#39;s care app</span>
-              <span class="proj__desc">A shared view of the day helps families and caregivers coordinate care.</span>
-            </button>
+            <div class="proj proj--soon proj--cover" style="--cover-bg: linear-gradient(180deg, #faf8ff 0%, #f8f5ff 30%, #f3effe 55%, #ede7fd 75%, #e8e1fc 90%, #e5ddfb 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #272840 65%, #302d52 80%, #3a3264 92%, #3e346b 100%)">
+              <img class="soon__note" src="images/coming-soon-note.png" width="900" height="374" alt="Coming soon, signed Harsh">
+              <span class="proj__media" aria-hidden="true"></span>
+            </div>
           </li>
         </ul>
       </div>
@@ -728,7 +755,7 @@
     const voiceFor = (el) => {
       if (el.classList.contains('sbtn') || el.hasAttribute('data-close')) return null;   /* the switch and the sheet closers have their own sounds */
       if (el.closest('.theme')) return el.dataset.t === 'dark' ? 'dark' : 'light';
-      if (el.hasAttribute('data-sheet')) return 'open';
+      if (el.hasAttribute('data-sheet') || el.classList.contains('proj')) return 'open';   /* project cards, including ones that link out */
       if (el.matches('a[href^="#"]') && el.closest('dialog')) return null;               /* closes its sheet, which plays the close sound */
       return 'tick';
     };
@@ -784,7 +811,7 @@
       let x = 0, y = 0, frame = 0;
       const place = () => { frame = 0; cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`; };
       const follow = (e) => { x = e.clientX; y = e.clientY; if (!frame) frame = requestAnimationFrame(place); };
-      document.querySelectorAll('.proj__media').forEach((card) => {
+      document.querySelectorAll('.proj:not(.proj--soon)').forEach((card) => {
         card.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { follow(e); cursor.classList.add('is-on'); } });
         card.addEventListener('pointermove', follow);
         card.addEventListener('pointerleave', hidePill);
@@ -989,7 +1016,7 @@
     const BADGES = {
       linkedin(g, w, h) {
         g.fillStyle = '#2867b2'; roundRect(g, 0, 0, w, h, 34); g.fill();
-        g.fillStyle = '#ffffff'; g.font = '700 150px Inter, Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.fillStyle = '#ffffff'; g.font = '700 150px Manrope, Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
         g.fillText('in', w / 2, h / 2 + 6);
       },
       mail(g, w, h) {
@@ -1234,6 +1261,164 @@
     crowd.classList.add('is-ready');
     return { jump(i) { if (!calm.matches && birds[i]) birds[i].jumpT = 0; } };
   }
+</script>
+
+<script>
+  /* ---- Pixel sakura: the branch is drawn cell by cell. Moving the cursor through the blossoms shakes petals loose;
+     a few also drop on their own every 5 to 6 seconds. Petals fall, drift, fade out, and regrow on the branch. ---- */
+  (() => {
+    const cv = document.querySelector('.sakura');
+    if (!cv || !cv.getContext) return;
+    const g = cv.getContext('2d');
+    const calm = matchMedia('(prefers-reduced-motion: reduce)');
+    const PAL = ['#755342', '#f7d9e4', '#f1bfd2', '#e3a0bd', '#ce779f'];                    /* bark, then four pinks from light to deep */
+    const MAP = [
+      '......................................3.1.......................................................331322...........................................',
+      '...........................224......2321322.........321........................................321..22.2.......3.3...............................',
+      '..........................2..112...111231331......33..114..................................322.222133..1.....4122.31.............................',
+      '........................112213233..3212.2211.....1341314100...............................331..131314131....12312312400..........................',
+      '................23......1.3233141001111223.1.....122311113..............................234231301123.23.....000332113............................',
+      '000..........3.212.3....222240303...123343.0000003222121.1...................132........2323303.2.1120000000.332.2241............................',
+      '0000000000...3133.11.....0013331....0021200....324333223...................31213.1....222323313310000........1113232.............................',
+      '...0000000003322322330000..130000000...........3.312112...................43122.132..2333122221................311...............................',
+      '..........0032001021000000000.................123111.11....................2.31223000134211111...............3...................................',
+      '...........000..231100000000000..............22231231.3.131.........000000013302212..3302000030000.......11.3132...............322...............',
+      '..............0242......43211..0000000.....2..2342221.1.204000000000.......3.33.22....3213212.....000000031331.32..........211223312...31........',
+      '................000....233.....221....00001112220211023311111................331........114.............3233120014330000..11.221314.122334.......',
+      '...................000.31131...............22423200001112242.1.3........................................321403.3.3233.001431234131223122.11......',
+      '....................231..2121.............22341.1..002122443231121.......................................33141231323....40222244..31110...3......',
+      '....................3.3004223...321........22.3121...030012312241.1........................................442331113..3.33..1322422313121.41.....',
+      '......................2112114.333.123........1.3........223241112.241..........................................1304331.3323..21113002.113.3111...',
+      '.......................312.10222..3111.....................3122321112..........................................322231121324.1.......003323233132.',
+      '.......................312...1142131.3.......................31233233121....3.2..................................33222221213...........01312.1.12',
+      '.............................42.32124.........................3113310130..3.32244..................................321123.43.............32102232',
+      '..............................2.13322..........................323421.3203133.3132.................................4..41012.............233231321',
+      '................................4...............................143.112..432204123..................................22.112...............1111413.',
+      '..................................................................232....133.30.24......................................2..................113...',
+      '..........................................................................12.1213................................................................',
+      '............................................................................223..................................................................'
+    ];
+    const COLS = 145, ROWS = MAP.length, FALL = 22;                  /* petals can fall 22 cells below the branch */
+    const C = [], R = [], P = [];
+    MAP.forEach((row, r) => { for (let c = 0; c < row.length; c++) if (row[c] !== '.') { C.push(c); R.push(r); P.push(+row[c]); } });
+    const N = C.length;
+    const on = new Uint8Array(N).fill(1), back = new Float64Array(N), grown = new Float64Array(N);
+    const pink = []; for (let k = 0; k < N; k++) if (P[k] > 0) pink.push(k);   /* the bark never falls */
+    const byPal = PAL.map((_, i) => { const list = []; for (let k = 0; k < N; k++) if (P[k] === i) list.push(k); return list; });
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    let dc = 4, cell = 4, parts = [], raf = 0, lastT = 0, wakeT = 0, gustT = 0, shedAt = 0, visible = true;
+
+    const draw = (now) => {
+      g.clearRect(0, 0, cv.width, cv.height);
+      byPal.forEach((list, i) => {
+        g.fillStyle = PAL[i];
+        for (const k of list) {
+          if (!on[k]) continue;
+          const a = grown[k] ? Math.min(1, (now - grown[k]) / 700) : 1;   /* a regrown petal fades back in */
+          if (a < 1) g.globalAlpha = a;
+          g.fillRect(C[k] * dc, R[k] * dc, dc, dc);
+          if (a < 1) g.globalAlpha = 1;
+        }
+      });
+      for (const q of parts) {                                             /* falling petals stay on the pixel grid */
+        const t = q.age / q.life;
+        g.globalAlpha = Math.max(0, 1 - Math.pow(t, 2.2));             /* holds its colour, then fades near the end */
+        g.fillStyle = PAL[q.p];
+        g.fillRect(Math.round(q.x) * dc, Math.round(q.y) * dc, dc, dc);
+      }
+      g.globalAlpha = 1;
+    };
+
+    const size = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      const vw = document.documentElement.clientWidth;
+      dc = Math.max(2, Math.round(vw * dpr / (vw < 760 ? 150 : 256)));   /* one cell in whole device pixels keeps edges crisp */
+      cell = dc / dpr;
+      const across = Math.min(COLS + 8, Math.floor(vw / cell));
+      cv.width = across * dc; cv.height = (ROWS + FALL) * dc;
+      cv.style.width = across * cell + 'px'; cv.style.height = (ROWS + FALL) * cell + 'px';
+      draw(performance.now());
+    };
+
+    const frame = (t) => {
+      raf = 0;
+      const dt = Math.min((t - (lastT || t)) / 1000, .05); lastT = t;
+      const now = performance.now();
+      let busy = parts.length > 0, next = Infinity;
+      for (const k of pink) {
+        if (!on[k]) { if (now >= back[k]) { on[k] = 1; grown[k] = now; } else next = Math.min(next, back[k]); }
+        if (grown[k]) { if (now - grown[k] < 700) busy = true; else grown[k] = 0; }
+      }
+      for (const q of parts) {
+        q.age += dt;
+        q.vy = Math.min(q.vy + 6 * dt, 8);                               /* gravity, in cells per second */
+        q.vx *= 1 - .8 * dt;
+        q.x += (q.vx + Math.sin(q.age * 2.6 + q.ph) * .8) * dt;          /* a little side-to-side sway */
+        q.y += q.vy * dt;
+      }
+      parts = parts.filter((q) => q.age < q.life && q.y < ROWS + FALL);
+      draw(now);
+      if (busy) raf = requestAnimationFrame(frame);
+      else { lastT = 0; clearTimeout(wakeT); if (next < Infinity) wakeT = setTimeout(wake, next - now + 20); }
+    };
+    const wake = () => { if (!raf) raf = requestAnimationFrame(frame); };
+
+    /* loosen up to `max` petals within `radius` cells of (x, y) */
+    const shed = (x, y, radius, chance, max, pushX = 0, pushY = 0) => {
+      const near = [];
+      for (const k of pink) {
+        if (!on[k]) continue;
+        const dx = C[k] + .5 - x, dy = R[k] + .5 - y;
+        if (dx * dx + dy * dy <= radius * radius && Math.random() < chance) near.push(k);
+      }
+      for (let i = near.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [near[i], near[j]] = [near[j], near[i]]; }
+      const now = performance.now();
+      for (const k of near.slice(0, max)) {
+        on[k] = 0; grown[k] = 0; back[k] = now + 7000 + Math.random() * 6000;      /* regrows 7 to 13 seconds later */
+        parts.push({ x: C[k], y: R[k], vx: (Math.random() - .5) * 1.6 + pushX, vy: 1.2 + Math.random() * 1.6 + pushY, p: P[k], age: 0, life: 2.2 + Math.random() * 1.3, ph: Math.random() * 6.3 });
+      }
+      if (near.length) wake();
+    };
+
+    /* the cursor brushes petals off; faster movement loosens more and carries them along */
+    const local = (e) => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / cell, y: (e.clientY - r.top) / cell }; };
+    let last = null;
+    addEventListener('pointermove', (e) => {
+      if (calm.matches || e.pointerType === 'touch') return;
+      const q = local(e), t = performance.now();
+      if (q.x < -3 || q.y < -3 || q.x > COLS + 3 || q.y > ROWS + 3) { last = null; return; }
+      let vx = 0, vy = 0;
+      if (last) { const dt = Math.max(t - last.t, 8) / 1000; vx = (q.x - last.x) / dt; vy = (q.y - last.y) / dt; }
+      last = { x: q.x, y: q.y, t };
+      if (t - shedAt < 40) return;                                       /* at most 25 shakes a second */
+      shedAt = t;
+      const speed = Math.hypot(vx, vy);
+      shed(q.x, q.y, 3, Math.min(.5, .12 + speed / 200), speed > 25 ? 3 : 2, clamp(vx * .04, -2.5, 2.5), clamp(vy * .02, -.4, 1.4));
+    }, { passive: true });
+    addEventListener('pointerdown', (e) => {                              /* on touch screens a tap in the branch shakes a few loose */
+      if (calm.matches) return;
+      const q = local(e);
+      if (q.x >= -2 && q.y >= -2 && q.x <= COLS + 2 && q.y <= ROWS + 2) shed(q.x, q.y, 3.2, .7, 8);
+    }, { passive: true });
+
+    /* every 5 to 6 seconds a breeze drops a few petals from one random blossom */
+    const gust = () => {
+      clearTimeout(gustT);
+      gustT = setTimeout(() => {
+        if (visible && !document.hidden && !calm.matches) {
+          const live = pink.filter((k) => on[k]);
+          if (live.length) { const k = live[(Math.random() * live.length) | 0]; shed(C[k] + .5, R[k] + .5, 2.4, .6, 4 + ((Math.random() * 5) | 0), (Math.random() - .5) * 1.2); }
+        }
+        gust();
+      }, 5000 + Math.random() * 1000);
+    };
+    if ('IntersectionObserver' in window) new IntersectionObserver(([seen]) => { visible = seen.isIntersecting; }).observe(cv);
+
+    let rz = 0;
+    addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(size); });
+    size();
+    gust();
+  })();
 </script>
 </body>
 </html>
