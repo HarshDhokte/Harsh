@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ShelfFlow Case Study | Harsh Dhokte</title>
+<meta name="description" content="A short, visual ShelfFlow case study: the film, secondary and primary research insights, users, ideas, system, the sensor shelf, final screens and testing, with one line of text per idea.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one centred white column, large images, one short line per idea. Sections start with a small numbered label and a single headline. No cards, no tints except image frames. Light only. */
+:root{
+  --bg:#FFFFFF;
+  --frame:#F4F6FA;
+  --ink:#10162B;
+  --text:#3A4155;
+  --muted:#7A8194;
+  --line:#E7EAF0;
+  --blue:#2F56DA;
+  --blue-soft:#EDF1FD;
+  --red:#D6454B; --amber:#E29A1B; --green:#2E9A5E;
+  --shade:rgba(16,22,43,.75);
+  --sans:"Manrope",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,video{display:block;max-width:100%;height:auto}
+h1,h2,h3{margin:0;color:var(--ink);text-wrap:balance}
+p,ul,figure{margin:0}
+ul{padding:0;list-style:none}
+a{color:var(--blue)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+.num{font-variant-numeric:tabular-nums}
+
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* Back button: sticky pill that returns to the portfolio home screen */
+.back{position:sticky;top:max(14px,env(safe-area-inset-top,0px));z-index:30;display:flex;margin-top:max(18px,env(safe-area-inset-top,0px));height:0;pointer-events:none}
+.back a{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:999px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border:1px solid var(--line);box-shadow:0 8px 24px -12px rgba(16,22,43,.35);color:var(--ink);font-size:14px;font-weight:700;text-decoration:none;transition:background-color .2s,transform .2s,box-shadow .2s}
+.back a svg{width:16px;height:16px;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.back a:hover{background:var(--bg);box-shadow:0 10px 28px -12px rgba(16,22,43,.45)}
+.back a:hover svg{transform:translateX(-3px)}
+
+/* Intro */
+.intro{padding-block:88px 40px;display:flex;flex-direction:column;gap:22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--ink)}
+.logo{width:30px;height:30px;border-radius:8px;background:var(--blue);display:flex;align-items:flex-end;justify-content:center;gap:2.5px;padding:8px 7px}
+.logo i{width:3.5px;border-radius:1px;background:var(--bg)}
+h1{font-size:clamp(34px,5vw,60px);line-height:1.05;font-weight:800;letter-spacing:-.035em;max-width:16ch}
+.lede{font-size:clamp(18px,1.7vw,21px);line-height:1.55;max-width:52ch;color:var(--text)}
+.meta{display:flex;flex-wrap:wrap;gap:12px 40px;padding-top:22px;border-top:1px solid var(--line);margin-top:8px}
+.meta div{min-width:0}
+.meta span{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meta b{font-size:15.5px;font-weight:600;color:var(--ink)}
+
+/* Film */
+.film{position:relative;border-radius:20px;overflow:hidden;background:var(--frame)}
+.film video{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--frame)}
+.sound{position:absolute;right:16px;bottom:16px;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:14px;font-weight:700;color:var(--ink);background:var(--bg);border:0;border-radius:999px;padding:10px 16px;cursor:pointer;box-shadow:0 8px 24px -10px rgba(16,22,43,.45)}
+.sound svg{width:16px;height:16px}
+.sound[hidden]{display:none}
+
+/* Sections */
+section{padding-block:clamp(64px,8vw,112px) 0;display:flex;flex-direction:column;gap:clamp(24px,3vw,36px);scroll-margin-top:12px}
+.label{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.label span{color:var(--muted);margin-right:10px}
+section h2{font-size:clamp(26px,3.2vw,40px);line-height:1.12;font-weight:800;letter-spacing:-.03em;max-width:24ch;margin-top:-14px}
+.note{font-size:18px;line-height:1.55;max-width:58ch;color:var(--text);margin-top:-8px}
+.cap{font-size:15px;line-height:1.5;color:var(--muted);margin-top:10px}
+.src{font-size:13px;color:var(--muted)}
+.src a{color:var(--muted)}
+
+/* Media */
+.img{border-radius:16px;overflow:hidden;background:var(--frame)}
+.img img{width:100%}
+.framed{background:var(--frame);border-radius:20px;padding:clamp(14px,2.6vw,36px)}
+.framed img{border-radius:10px;box-shadow:0 18px 40px -28px rgba(16,22,43,.4)}
+a.zoom{display:block;cursor:zoom-in;color:inherit;text-decoration:none}
+.g2,.g3,.g4{display:grid;gap:clamp(14px,2vw,24px)}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g2 > *,.g3 > *,.g4 > *{min-width:0}
+
+/* Big numbers */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.stat b{display:block;font-size:clamp(40px,5vw,64px);line-height:1;font-weight:800;letter-spacing:-.04em;color:var(--blue)}
+.stat p{margin-top:10px;font-size:16px;line-height:1.45;color:var(--text);max-width:28ch}
+.stat .src{display:block;margin-top:6px}
+
+/* Insight blocks */
+.insights{list-style:none;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.insights li{background:var(--blue-soft);border-radius:18px;padding:24px 22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.insights b.num,.insights > li > b{font-size:clamp(36px,4vw,52px);line-height:1;font-weight:800;letter-spacing:-.04em;color:var(--blue)}
+.insights p{font-size:16px;line-height:1.45;color:var(--ink)}
+.insights .src{margin-top:auto}
+.insights.pri{grid-template-columns:repeat(2,minmax(0,1fr))}
+.insights.pri li{background:var(--frame);flex-direction:row;gap:16px;align-items:flex-start}
+.insights.pri .n{font-size:15px;font-weight:800;color:var(--blue);padding-top:2px}
+.insights.pri p{font-size:17px;color:var(--muted)}
+.insights.pri b{display:block;color:var(--ink);font-size:18px;margin-bottom:2px}
+
+/* Quotes */
+.quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.quotes p{font-size:clamp(18px,1.7vw,21px);line-height:1.4;font-weight:600;color:var(--ink);border-left:3px solid var(--blue);padding-left:16px}
+
+/* Photo mosaic */
+.mosaic{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:clamp(120px,13vw,200px);gap:10px;grid-auto-flow:dense}
+.mosaic figure{position:relative;border-radius:14px;overflow:hidden;background:var(--frame);min-width:0}
+.mosaic img{width:100%;height:100%;object-fit:cover}
+.mosaic figcaption{position:absolute;left:8px;bottom:8px;right:8px;font-size:12.5px;font-weight:600;color:var(--bg);background:var(--shade);padding:5px 9px;border-radius:8px;line-height:1.35}
+.m-a{grid-column:span 2;grid-row:span 2}.m-b{grid-row:span 2}.m-w{grid-column:span 2}
+
+/* Personas */
+.persona{display:flex;gap:18px;align-items:flex-start}
+.persona img{width:84px;height:84px;border-radius:50%;object-fit:cover;flex:none}
+.persona h3{font-size:20px}
+.persona span{display:block;font-size:14px;color:var(--muted);margin:2px 0 8px}
+.persona q{display:block;font-size:18px;line-height:1.4;font-weight:600;color:var(--blue);quotes:"\201C" "\201D"}
+
+/* Simple lists */
+.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px}
+.list li{padding:16px 0;border-top:1px solid var(--line);font-size:17px;line-height:1.45;color:var(--ink);font-weight:600}
+.list li small{display:block;font-weight:400;font-size:15px;color:var(--muted);margin-top:2px}
+
+/* HMW */
+.hmwband{background:var(--blue);border-radius:24px;padding:clamp(32px,5vw,72px) clamp(24px,5vw,72px);margin-top:-8px}
+.hmwband p{font-size:clamp(24px,3vw,38px);line-height:1.25;font-weight:700;letter-spacing:-.02em;color:var(--bg);max-width:32ch}
+
+/* Flow strip */
+.strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.strip div{position:relative;padding:18px 16px;border-radius:14px;background:var(--frame);min-width:0}
+.strip div.hot{background:var(--blue-soft)}
+.strip span{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.strip b{display:block;font-size:clamp(28px,3vw,40px);line-height:1.1;font-weight:800;color:var(--ink);margin:6px 0 2px}
+.strip div.hot b{color:var(--blue)}
+.strip p{font-size:14px;line-height:1.4;color:var(--muted)}
+
+/* Lane states */
+.states{display:flex;flex-wrap:wrap;gap:10px}
+.states span{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--ink);padding:8px 14px;border:1px solid var(--line);border-radius:999px}
+.states span::before{content:"";width:9px;height:9px;border-radius:50%}
+.s-f::before{background:var(--green)}.s-l::before{background:var(--amber)}.s-o::before{background:var(--red)}
+
+.uivid video{width:100%;aspect-ratio:16/9;border-radius:20px;background:var(--frame);object-fit:cover}
+
+/* Phones */
+.phones{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,2vw,24px)}
+.phones figure{min-width:0}
+.phones img{width:100%;border-radius:20px;border:1px solid var(--line);aspect-ratio:660/1290;object-fit:cover;object-position:top;background:var(--bg)}
+.phones figcaption{margin-top:10px;font-size:15px;font-weight:600;color:var(--ink)}
+.phones figcaption span{display:block;font-weight:400;font-size:14px;color:var(--muted)}
+.sublabel{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:-10px}
+
+/* Before/after viewer */
+.fixes{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:24px;align-items:start}
+.fixlist{display:flex;flex-direction:column}
+.fixlist button{appearance:none;font:inherit;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:14px 0;cursor:pointer;color:var(--muted);font-size:16px;line-height:1.4;font-weight:600}
+.fixlist button:last-child{border-bottom:1px solid var(--line)}
+.fixlist button[aria-pressed="true"]{color:var(--blue)}
+.fixlist button:hover{color:var(--ink)}
+
+/* SUS */
+.sus{position:relative;padding-top:44px}
+.zones{display:flex;height:12px;border-radius:999px;overflow:hidden}
+.zones i{display:block}
+.pin{position:absolute;top:0;bottom:0;border-left:2px solid var(--ink)}
+.pin label{position:absolute;top:0;white-space:nowrap;font-size:14px;font-weight:600;color:var(--muted)}
+.pin.avg label{right:8px}
+.pin.me{border-left-color:var(--blue)}
+.pin.me label{left:8px;color:var(--blue);font-weight:800}
+.ticks{position:relative;height:18px;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.ticks span:first-child{transform:none}.ticks span:last-child{transform:translateX(-100%)}
+
+/* Role */
+.mine li{padding:16px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:baseline;font-size:17px;font-weight:600;color:var(--ink)}
+.mine li span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+
+footer{margin-top:clamp(72px,9vw,120px);padding-block:32px 56px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:14px;font-size:14px;color:var(--muted)}
+footer .names{color:var(--ink);font-weight:600;font-size:15.5px}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:var(--shade);display:flex;align-items:center;justify-content:center;padding:max(60px,calc(env(safe-area-inset-top,0px) + 60px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lb[hidden]{display:none}
+.lb img{max-width:100%;max-height:100%;border-radius:12px;background:var(--bg)}
+.lb button{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 14px);appearance:none;border:0;width:42px;height:42px;border-radius:50%;background:var(--bg);color:var(--ink);font:inherit;font-size:18px;font-weight:800;cursor:pointer}
+
+@media (max-width:860px){
+  .g3,.g4,.stats,.quotes,.fixes{grid-template-columns:minmax(0,1fr)}
+  .insights{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .strip div.hot{grid-column:1/-1}
+  .phones{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .g2,.list,.insights,.insights.pri{grid-template-columns:minmax(0,1fr)}
+  .mosaic{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:140px}
+  .intro{padding-block:72px 28px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<nav class="back" aria-label="Back to portfolio">
+  <a id="backhome" href="../index.html" aria-label="Back to home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to home</a>
+</nav>
+
+<header class="intro">
+  <div class="brand"><span class="logo" aria-hidden="true"><i style="height:6px"></i><i style="height:11px"></i><i style="height:8px"></i></span>ShelfFlow</div>
+  <h1>Sending every real shelf gap to the right person.</h1>
+  <p class="lede">An agentic shelf-management system for Indian supermarkets, with a sensor shelf, a manager dashboard and a staff app.</p>
+  <div class="meta">
+    <div><span>Role</span><b>UX designer, team of five</b></div>
+    <div><span>Timeline</span><b>4 weeks · Sep to Oct 2026</b></div>
+    <div><span>Tools</span><b>Figma, Claude, Python, YOLOv8, Arduino</b></div>
+    <div><span>Course</span><b>UED P5 · SID</b></div>
+  </div>
+</header>
+
+<div class="film">
+  <video id="film" autoplay muted loop playsinline preload="auto" poster="img/poster.jpg" width="1600" height="900">
+    <source src="img/shelfflow-explainer.mp4" type="video/mp4">
+  </video>
+  <button class="sound" id="sound" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Turn on sound</button>
+</div>
+
+<!-- 01 -->
+<section id="problem">
+  <p class="label"><span>01</span>Problem</p>
+  <h2>The stock record and the shelf drift apart.</h2>
+  <div class="img"><img src="img/problem-shelf.webp" alt="Shelf lane with four packs while the record lists twelve" width="1600" height="704" loading="lazy"></div>
+</section>
+
+<!-- 02 -->
+<section id="secondary">
+  <p class="label"><span>02</span>Secondary research</p>
+  <h2>Secondary research insights</h2>
+  <p class="note">Published studies show how far store records drift from the shelf.</p>
+  <ol class="insights">
+    <li><b class="num">65%</b><p>of inventory records were wrong across 37 stores of one retailer.</p><span class="src"><a href="https://doi.org/10.1287/mnsc.1070.0789" target="_blank" rel="noopener">DeHoratius and Raman, 2008</a></span></li>
+    <li><b class="num">24k</b><p>grocery SKUs showed record error rising with restocking frequency.</p><span class="src"><a href="https://orca.cardiff.ac.uk/id/eprint/188301/" target="_blank" rel="noopener">Rekik et al., 2026</a></span></li>
+    <li><b class="num">11%</b><p>store-wide sales lift followed an audit that fixed the record.</p><span class="src"><a href="https://orca.cardiff.ac.uk/id/eprint/188301/" target="_blank" rel="noopener">Rekik et al., 2026</a></span></li>
+    <li><b>Live</b><p>shelf visibility matters most in direct-to-shelf stores such as DMart.</p><span class="src">Bixler and Honhon, 2021</span></li>
+  </ol>
+</section>
+
+<!-- 03 -->
+<section id="research">
+  <p class="label"><span>03</span>Primary research</p>
+  <h2>Primary research insights</h2>
+  <p class="note">Store visits to Yousta, Mr. DIY and Star Bazaar, manager and staff interviews, and a survey of 26 shoppers.</p>
+  <div class="mosaic">
+    <figure class="m-a"><img src="img/ph-interview.webp" alt="Team interviewing a store associate" width="1400" height="788" loading="lazy"><figcaption>Interviews in the aisle</figcaption></figure>
+    <figure class="m-b"><img src="img/ph-aisle.webp" alt="Team studying shelves with staff" width="760" height="1013" loading="lazy"><figcaption>Shelf checks with staff</figcaption></figure>
+    <figure><img src="img/ph-pricetag.webp" alt="Digital price tag" width="620" height="827" loading="lazy"><figcaption>Digital price tags</figcaption></figure>
+    <figure><img src="img/ph-handheld.webp" alt="Handheld receiving app" width="554" height="739" loading="lazy"><figcaption>Handheld receiving app</figcaption></figure>
+    <figure><img src="img/ph-backroom-scan.webp" alt="Backroom scanning" width="560" height="746" loading="lazy"><figcaption>Backroom scans</figcaption></figure>
+    <figure><img src="img/ph-label.webp" alt="Shelf label with bay code" width="560" height="421" loading="lazy"><figcaption>Bay and category codes</figcaption></figure>
+    <figure class="m-w"><img src="img/ph-store.webp" alt="Star Bazaar entrance" width="1000" height="750" loading="lazy"><figcaption>Star Bazaar</figcaption></figure>
+  </div>
+  <ol class="insights pri">
+    <li><span class="n">01</span><p><b>A missed scan hides an item from sale.</b> An unscanned item reads as zero at the till.</p></li>
+    <li><span class="n">02</span><p><b>An item takes about three days to become sellable.</b> Stock corrections run on paper sheets.</p></li>
+    <li><span class="n">03</span><p><b>Alerts reach the manager, and the floor waits.</b> Low-designation staff work outside the app.</p></li>
+    <li><span class="n">04</span><p><b>Stores invest in tech that shoppers see first.</b> Staff tools get the least attention.</p></li>
+  </ol>
+  <div class="quotes">
+    <p>“The system showed it was available, but we couldn’t find it.”</p>
+    <p>“There was a label, but the shelf was empty.”</p>
+    <p>“I just buy those items online now.”</p>
+  </div>
+  <p class="src" style="margin-top:-12px">Shopper survey · 26 responses</p>
+  <a class="zoom" href="img/context-model.webp" target="_blank" rel="noopener"><div class="img"><img src="img/context-model.webp" alt="Physical contextual model with failure points" width="1920" height="1080" loading="lazy"></div><p class="cap">Physical contextual model: where the record and the shelf separate.</p></a>
+</section>
+
+<!-- 04 -->
+<section id="users">
+  <p class="label"><span>04</span>Users</p>
+  <h2>Two people read the same shelf at different speeds.</h2>
+  <div class="g2">
+    <div class="persona"><img src="img/persona-rohan.webp" alt="Rohan Patil persona" width="440" height="440" loading="lazy"><div><h3>Rohan Patil</h3><span>Sales associate · works one task at a time</span><q>System shows but the employees still count.</q></div></div>
+    <div class="persona"><img src="img/persona-priya.webp" alt="Priya Deshmukh persona" width="440" height="440" loading="lazy"><div><h3>Priya Deshmukh</h3><span>Store manager · watches the whole store</span><q>If it goes over the loss budget, it comes back to the store.</q></div></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="hmw">
+  <p class="label"><span>05</span>How might we</p>
+  <div class="hmwband">
+    <p>How might we keep system and staff knowledge in sync at the moments that matter, so stock data stays trustworthy even when it is not constantly updated?</p>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="ideation">
+  <p class="label"><span>06</span>Ideation</p>
+  <h2>Boards and a card sort turned findings into a direction.</h2>
+  <div class="g2">
+    <a class="zoom" href="img/syn-fishbone.webp" target="_blank" rel="noopener"><div class="img"><img src="img/syn-fishbone.webp" alt="Fishbone diagram" width="1600" height="767" loading="lazy"></div><p class="cap">Fishbone: why a product is missing</p></a>
+    <a class="zoom" href="img/syn-cardsort.webp" target="_blank" rel="noopener"><div class="img"><img src="img/syn-cardsort.webp" alt="Open card sort" width="1600" height="482" loading="lazy"></div><p class="cap">Card sort: staff group work by action</p></a>
+    <a class="zoom" href="img/syn-mindmap.webp" target="_blank" rel="noopener"><div class="img"><img src="img/syn-mindmap.webp" alt="Mind map" width="1236" height="900" loading="lazy"></div><p class="cap">Mind map of the whole concept</p></a>
+    <a class="zoom" href="img/wb-board.webp" target="_blank" rel="noopener"><div class="img"><img src="img/wb-board.webp" alt="Whiteboard dashboard sketch" width="800" height="601" loading="lazy"></div><p class="cap">Whiteboard: ranking dashboard tasks</p></a>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="concept">
+  <p class="label"><span>07</span>Concept</p>
+  <h2>A shelf sensor grew into a system that automates awareness.</h2>
+  <div class="g2" style="grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);align-items:stretch">
+    <div class="img"><img src="img/shelf-photo.webp" alt="The physical prototype shelf" width="760" height="1014" loading="lazy" style="height:100%;object-fit:cover"></div>
+    <a class="zoom" href="img/yolo-dashboard.webp" target="_blank" rel="noopener"><div class="img"><img src="img/yolo-dashboard.webp" alt="First dashboard with live YOLO camera feed" width="1583" height="887" loading="lazy"></div><p class="cap">The first build: a real shelf with a live dashboard.</p></a>
+  </div>
+  <p class="note">An alert alone left the real questions open: why, who and how urgent. So the sensor became one input, and a person checks before acting.</p>
+</section>
+
+<!-- 06 -->
+<section id="system">
+  <p class="label"><span>08</span>System</p>
+  <h2>The agent checks every gap against the till first.</h2>
+  <div class="strip">
+    <div><span>Morning</span><b class="num">15</b><p>counted</p></div>
+    <div><span>Sensor</span><b class="num">8</b><p>on shelf</p></div>
+    <div><span>Left</span><b class="num">7</b><p>packs moved</p></div>
+    <div><span>Till</span><b class="num">5</b><p>sold</p></div>
+    <div class="hot"><span>Unexplained</span><b class="num">2</b><p>staff go and look</p></div>
+  </div>
+  <ul class="list">
+    <li>Staff get the task first.<small>They stand closest to the shelf.</small></li>
+    <li>The manager gets the exceptions.<small>None found, blocked, or left unreviewed.</small></li>
+  </ul>
+</section>
+
+<!-- 07 -->
+<section id="build">
+  <p class="label"><span>09</span>Build</p>
+  <h2>A working shelf feeds both apps live.</h2>
+  <a class="zoom" href="img/rig.webp" target="_blank" rel="noopener"><div class="img"><img src="img/rig.webp" alt="Rig: camera with YOLO and IR sensors on an Arduino feed a FastAPI backend and both apps" width="1700" height="650" loading="lazy"></div></a>
+  <div class="g2" style="align-items:center">
+    <div class="img"><img src="img/yolo-camera.webp" alt="YOLO detections with confidence scores" width="587" height="418" loading="lazy"></div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <p class="note" style="margin:0">IR sensors on an Arduino read each lane. A YOLOv8n model trained on three products identifies each pack. A FastAPI backend updates both apps in one to two seconds.</p>
+      <div class="states"><span class="s-f">Full</span><span class="s-l">Low</span><span class="s-o">Out or wrong lane</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 -->
+<section id="screens">
+  <p class="label"><span>10</span>Final UI</p>
+  <h2>One dashboard for the office, one app for the floor.</h2>
+  <figure class="uivid">
+    <video controls playsinline preload="metadata" poster="img/ui-poster.jpg" width="1600" height="900">
+      <source src="img/ui-walkthrough.mp4" type="video/mp4">
+    </video>
+    <figcaption class="cap">UI walkthrough · 2 min 30 s · The manager starts a stock count and a floor staff member completes it on the phone.</figcaption>
+  </figure>
+  <a class="zoom framed" href="img/dash-overview.webp" target="_blank" rel="noopener"><img src="img/dash-overview.webp" alt="Dashboard overview" width="1800" height="1125" loading="lazy"></a>
+  <div class="g2">
+    <a class="zoom" href="img/dash-tasks.webp" target="_blank" rel="noopener"><div class="framed"><img src="img/dash-tasks.webp" alt="Tasks page" width="1800" height="1125" loading="lazy"></div><p class="cap">Tasks</p></a>
+    <a class="zoom" href="img/dash-analytics.webp" target="_blank" rel="noopener"><div class="framed"><img src="img/dash-analytics.webp" alt="Store analytics" width="1800" height="1125" loading="lazy"></div><p class="cap">Store analytics</p></a>
+  </div>
+  <p class="sublabel">Sensor alert</p>
+  <div class="phones">
+    <figure><a class="zoom" href="img/staff-banner.webp" target="_blank" rel="noopener"><img src="img/staff-banner.webp" alt="Alert overlay" width="633" height="1263" loading="lazy"></a><figcaption>Alert<span>One person, one task</span></figcaption></figure>
+    <figure><a class="zoom" href="img/staff-task.webp" target="_blank" rel="noopener"><img src="img/staff-task.webp" alt="Check task" width="660" height="1290" loading="lazy"></a><figcaption>Check<span>What the sensor saw</span></figcaption></figure>
+    <figure><a class="zoom" href="img/staff-restock.webp" target="_blank" rel="noopener"><img src="img/staff-restock.webp" alt="Restock" width="660" height="1290" loading="lazy"></a><figcaption>Restock<span>Product already chosen</span></figcaption></figure>
+    <figure><a class="zoom" href="img/staff-verified.webp" target="_blank" rel="noopener"><img src="img/staff-verified.webp" alt="Verified by sensor" width="660" height="1290" loading="lazy"></a><figcaption>Verified<span>The sensor closes it</span></figcaption></figure>
+  </div>
+  <p class="sublabel">Stock count</p>
+  <div class="phones">
+    <figure><a class="zoom" href="img/staff-home.webp" target="_blank" rel="noopener"><img src="img/staff-home.webp" alt="Staff home" width="660" height="1290" loading="lazy"></a><figcaption>Home<span>Scan window and tasks</span></figcaption></figure>
+    <figure><a class="zoom" href="img/staff-pick.webp" target="_blank" rel="noopener"><img src="img/staff-pick.webp" alt="Choose what to scan" width="660" height="1290" loading="lazy"></a><figcaption>Choose<span>Bay, shelf, product</span></figcaption></figure>
+    <figure><a class="zoom" href="img/staff-scan.webp" target="_blank" rel="noopener"><img src="img/staff-scan.webp" alt="Scanning with slide to finish" width="660" height="1290" loading="lazy"></a><figcaption>Scan<span>Slide to finish</span></figcaption></figure>
+    <figure><a class="zoom" href="img/staff-result.webp" target="_blank" rel="noopener"><img src="img/staff-result.webp" alt="Result" width="660" height="1290" loading="lazy"></a><figcaption>Result<span>Mismatch reasons</span></figcaption></figure>
+  </div>
+</section>
+
+<!-- 09 -->
+<section id="testing">
+  <p class="label"><span>11</span>Testing</p>
+  <h2>Five participants rated the working build 72 on SUS.</h2>
+  <div class="g2">
+    <div class="img"><img src="img/test-1.webp" alt="Think-aloud session" width="686" height="514" loading="lazy"></div>
+    <div class="img"><img src="img/test-2.webp" alt="Participant testing the staff app" width="685" height="514" loading="lazy"></div>
+  </div>
+  <div class="sus" role="img" aria-label="SUS scale 0 to 100: average 68, ShelfFlow 72">
+    <div class="zones"><i style="width:51%;background:#F6D3D5"></i><i style="width:17%;background:#FBE7BF"></i><i style="width:12%;background:#D3DEFB"></i><i style="width:20%;background:#CFEBDB"></i></div>
+    <span class="pin avg" style="left:68%"><label>Average 68</label></span>
+    <span class="pin me" style="left:72%"><label>ShelfFlow 72</label></span>
+  </div>
+  <div class="ticks num"><span style="left:0">0</span><span style="left:51%">51</span><span style="left:68%">68</span><span style="left:80%">80</span><span style="left:100%">100</span></div>
+  <div class="fixes">
+    <div class="fixlist" role="group" aria-label="Pick a fix to compare">
+      <button type="button" aria-pressed="true" data-img="img/p-redesign1.webp">The count request names its bay and owner</button>
+      <button type="button" aria-pressed="false" data-img="img/p-redesign2.webp">Each result row shows the staff reason</button>
+      <button type="button" aria-pressed="false" data-img="img/p-redesign3.webp">A rejection creates a recount task</button>
+      <button type="button" aria-pressed="false" data-img="img/p-redesign4.webp">An assignee picker replaces one fixed person</button>
+      <button type="button" aria-pressed="false" data-img="img/p-redesign5.webp">Map restocks become real tasks</button>
+      <button type="button" aria-pressed="false" data-img="img/p-redesign6.webp">The picker splits into focused steps</button>
+    </div>
+    <a class="zoom" id="fixzoom" href="img/p-redesign1.webp" target="_blank" rel="noopener"><div class="img"><img id="fiximg" src="img/p-redesign1.webp" alt="Before and after of the selected fix" width="1600" height="716" loading="lazy"></div><p class="cap">Six fixes from ten issues found. Before on the left, after on the right.</p></a>
+  </div>
+</section>
+
+
+<footer>
+  <p class="names">Vidhi Kanthale · Harsh Dhokte · Harshita Sangtani · Jui Bhalerao · Ritu Wadekar</p>
+  <p>Group 3 · UED P5 · Symbiosis Institute of Design</p>
+</footer>
+
+</div>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Full-size image">
+  <button type="button" id="lbclose" aria-label="Close full-size image">✕</button>
+  <img id="lbimg" alt="">
+</div>
+
+<script>
+(function(){
+  var v=document.getElementById('film'),snd=document.getElementById('sound');
+  var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){});
+  snd.addEventListener('click',function(){v.muted=false;v.currentTime=0;v.loop=false;v.controls=true;var q=v.play();if(q&&q.catch)q.catch(function(){});snd.hidden=true;});
+
+  var lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg'),cl=document.getElementById('lbclose'),last=null;
+  function openLb(h,a,f){lbimg.src=h;lbimg.alt=a||'';lb.hidden=false;last=f;cl.focus();document.documentElement.style.overflow='hidden';}
+  function closeLb(){lb.hidden=true;lbimg.removeAttribute('src');document.documentElement.style.overflow='';if(last)last.focus();}
+  document.addEventListener('click',function(e){var a=e.target.closest('a.zoom');if(a){e.preventDefault();var im=a.querySelector('img');openLb(a.getAttribute('href'),im?im.alt:'',a);}});
+  lb.addEventListener('click',function(e){if(e.target===lb||e.target===cl)closeLb();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)closeLb();});
+
+  var btns=[].slice.call(document.querySelectorAll('.fixlist button')),img=document.getElementById('fiximg'),zm=document.getElementById('fixzoom');
+  btns.forEach(function(b){b.addEventListener('click',function(){btns.forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});img.src=b.dataset.img;zm.href=b.dataset.img;});});
+})();
+</script>
+</body>
+</html>
