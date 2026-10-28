@@ -453,7 +453,7 @@
           <button class="tbtn" type="button" data-t="dark" role="radio" aria-checked="false" aria-label="Dark theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
           </div>
           <span class="tools__sep" aria-hidden="true"></span>
-          <button class="sbtn" type="button" aria-pressed="false" aria-label="Click sounds" title="Turn click sounds on"><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16.5 9.5l4.5 5M21 9.5l-4.5 5"/></svg><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.4a8 8 0 0 1 0 11.2"/></svg></button>
+          <button class="sbtn" type="button" aria-pressed="true" aria-label="Click sounds" title="Turn click sounds off"><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16.5 9.5l4.5 5M21 9.5l-4.5 5"/></svg><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.4a8 8 0 0 1 0 11.2"/></svg></button>
         </div>
       </div>
 
@@ -494,17 +494,18 @@
              --glow on each panel is the colour of its corner glow, as R G B. -->
         <ul class="projs" id="projects">
           <li>
-            <button class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #fcf8fb 0%, #fcf7fa 30%, #fdf3f8 55%, #feedf5 75%, #ffe9f4 90%, #ffe5f2 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2c2739 65%, #432e48 80%, #583356 92%, #5f3559 100%)" type="button" data-sheet="benefits" aria-haspopup="dialog">
+            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #faf8ff 0%, #f8f5ff 30%, #f3effe 55%, #ede7fd 75%, #e8e1fc 90%, #e5ddfb 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #272840 65%, #302d52 80%, #3a3264 92%, #3e346b 100%)" href="ShelfFlow/index.html">
               <span class="proj__head">
                 <span class="proj__text">
-                  <span class="proj__title">Simplifying Employee Benefits at Scale</span>
-                  <span class="proj__desc">Designed employee benefits experiences for a large enterprise, simplifying access to welfare schemes and claims for active and retired employees.</span>
-                  <span class="proj__tags"><span>Internship</span><span>Enterprise</span><span class="tag-nda" title="Shared under NDA"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect class="lock-body" x="4" y="9.5" width="16" height="12.5" rx="4.5"/><path d="M12 14.4v3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>NDA</span></span>
+                  <span class="proj__title">ShelfFlow: Intelligent Retail Operations</span>
+                  <span class="proj__desc">A retail operations system that helps store teams monitor shelf conditions, prioritize stock issues, and route actionable alerts to the right people using real-time shelf intelligence.</span>
+                  <span class="sr-only">Opens the ShelfFlow case study.</span>
+                  <span class="proj__tags"><span>Retail Tech</span><span>AI/UX</span><span>Vibe Coded</span></span>
                 </span>
                 <span class="proj__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
               </span>
-              <span class="proj__media"><img class="proj__cover" src="images/cover-benefits.webp" width="1400" height="800" alt="" loading="lazy"></span>
-            </button>
+              <span class="proj__media"><img class="proj__cover" src="images/cover-shelfflow.webp" width="1400" height="800" alt="ShelfFlow manager dashboard on a laptop" loading="lazy"></span>
+            </a>
           </li>
           <li>
             <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #f5f5f5 0%, #f6f6f5 10%, #f9f7f5 25%, #fbf8f5 40%, #fdfaf5 55%, #fefbf6 70%, #fff8ee 80%, #fff1dd 90%, #ffedd5 95%, #ffeacd 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2e2b35 65%, #47383a 80%, #5e4536 92%, #66493a 100%)" href="https://app.notion.com/p/UPI-Companion-App-Case-Study-2f2163fb54d18153be46f54f4cdfe8c9" target="_blank" rel="noopener">
@@ -521,6 +522,20 @@
             </a>
           </li>
           <li>
+            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #fcf8fb 0%, #fcf7fa 30%, #fdf3f8 55%, #feedf5 75%, #ffe9f4 90%, #ffe5f2 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2c2739 65%, #432e48 80%, #583356 92%, #5f3559 100%)" href="benefits-portal-case-study/index.html">
+              <span class="proj__head">
+                <span class="proj__text">
+                  <span class="proj__title">Simplifying Employee Benefits at Scale</span>
+                  <span class="proj__desc">Designed employee benefits experiences for a large enterprise, simplifying access to welfare schemes and claims for active and retired employees.</span>
+                  <span class="sr-only">Opens the case study. Shared under NDA.</span>
+                  <span class="proj__tags"><span>Internship</span><span>Enterprise</span><span class="tag-nda" title="Shared under NDA"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect class="lock-body" x="4" y="9.5" width="16" height="12.5" rx="4.5"/><path d="M12 14.4v3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>NDA</span></span>
+                </span>
+                <span class="proj__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              </span>
+              <span class="proj__media"><img class="proj__cover" src="images/cover-benefits.webp" width="1400" height="800" alt="" loading="lazy"></span>
+            </a>
+          </li>
+          <li>
             <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #f8fbff 0%, #f6faff 30%, #f1f7ff 55%, #eaf3fe 75%, #e5f0fe 90%, #e2eefd 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #222c42 65%, #23355a 80%, #254070 92%, #26457a 100%)" href="https://www.figma.com/deck/UTStKJ5sMaTFzFlRwE1t2B/P2_Jury?node-id=238-3171&amp;viewport=-107%2C-98%2C0.51&amp;t=trLif5Ew46ILw1mb-1&amp;scaling=min-zoom&amp;content-scaling=fixed&amp;page-id=0%3A1" target="_blank" rel="noopener">
               <span class="proj__head">
                 <span class="proj__text">
@@ -532,20 +547,6 @@
                 <span class="proj__arrow proj__arrow--out" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8.5 7H17v8.5"/></svg></span>
               </span>
               <span class="proj__media"><img class="proj__cover" src="images/cover-care.webp" width="1400" height="800" alt="" loading="lazy"></span>
-            </a>
-          </li>
-          <li>
-            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #faf8ff 0%, #f8f5ff 30%, #f3effe 55%, #ede7fd 75%, #e8e1fc 90%, #e5ddfb 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #272840 65%, #302d52 80%, #3a3264 92%, #3e346b 100%)" href="ShelfFlow/index.html">
-              <span class="proj__head">
-                <span class="proj__text">
-                  <span class="proj__title">ShelfFlow: Intelligent Retail Operations</span>
-                  <span class="proj__desc">A retail operations system that helps store teams monitor shelf conditions, prioritize stock issues, and route actionable alerts to the right people using real-time shelf intelligence.</span>
-                  <span class="sr-only">Opens the ShelfFlow case study.</span>
-                  <span class="proj__tags"><span>Retail Tech</span><span>AI/UX</span><span>Vibe Coded</span></span>
-                </span>
-                <span class="proj__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-              </span>
-              <span class="proj__media"><img class="proj__cover" src="images/cover-shelfflow.webp" width="1400" height="800" alt="ShelfFlow manager dashboard on a laptop" loading="lazy"></span>
             </a>
           </li>
         </ul>
@@ -709,9 +710,10 @@
     new MutationObserver(paintDots).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-mode'] });
     paintDots();
 
-    /* ---- Click sounds: tiny synthesized ticks (no audio files), silent until the visitor switches them on ---- */
+    /* ---- Click sounds: tiny synthesized ticks (no audio files), on by default, the visitor can switch them off ---- */
     /* SOUND:BEGIN */
-    const sound = { on: false };
+    const sound = { on: true };                                          /* on by default; a visitor who switches it off keeps it off (remembered below) */
+    try { if (localStorage.getItem('hd-sound') === 'off') sound.on = false; } catch (err) {}
     let ac = null, noise = null;
     const getAudio = () => {
       if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); }
@@ -756,8 +758,11 @@
     /* SOUND:END */
 
     const sbtn = document.querySelector('.sbtn');
+    sbtn.setAttribute('aria-pressed', String(sound.on));
+    sbtn.title = sound.on ? 'Turn click sounds off' : 'Turn click sounds on';
     sbtn.addEventListener('click', () => {
       sound.on = !sound.on;
+      try { localStorage.setItem('hd-sound', sound.on ? 'on' : 'off'); } catch (err) {}
       sbtn.setAttribute('aria-pressed', String(sound.on));
       sbtn.title = sound.on ? 'Turn click sounds off' : 'Turn click sounds on';
       play('on');                                                       /* a confirmation chime, only when switching on */
