@@ -369,6 +369,101 @@
   .more-card h2 { margin-bottom: 12px; }
   .more-btn { display: inline-block; margin-top: 22px; background: var(--ink); color: var(--cream); text-decoration: none; font-weight: 600; font-size: .95rem; padding: 12px 22px; border-radius: 999px; }
   .more-btn:hover { background: var(--pink); }
+  /* ===== v4 visual blocks ===== */
+  .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 40px; background: var(--cream); border: 1px solid #d9d7d2; }
+  .split > div { padding: clamp(22px, 3vw, 34px); }
+  .split > div + div { border-left: 1px solid #d9d7d2; }
+  .split .label { font: 600 .9rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; }
+  .split p:not(.label) { font-size: 1.05rem; line-height: 1.6; color: var(--ink); }
+  .hmw-card { margin-top: clamp(56px, 7vw, 88px); background: var(--cream); border: 1px solid #d9d7d2; padding: clamp(24px, 3.4vw, 40px); }
+  .hmw-card .label { font: 600 .9rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--pink); margin-bottom: 12px; }
+  .hmw-card p:not(.label) { font-family: var(--display); font-size: clamp(1.2rem, 2vw, 1.55rem); line-height: 1.45; color: var(--ink); max-width: 46ch; }
+  .users { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 24px; background: var(--cream); border: 1px solid #d9d7d2; }
+  .users > div { padding: 26px 22px 30px; }
+  .users > div + div { border-left: 1px solid #d9d7d2; }
+  .users .ulabel { font: 500 .72rem/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--pink); }
+  .users h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin-top: 14px; color: var(--ink); }
+  .users p:not(.ulabel) { margin-top: 8px; font-size: .95rem; line-height: 1.55; color: var(--grey); }
+  .principles .card h3 { font-family: var(--display); font-variation-settings: normal; }
+  .pair.light { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); margin-top: 40px; align-items: start; }
+  .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(22px, 3vw, 40px) clamp(20px, 3vw, 36px); margin-top: 40px; align-items: start; }
+  .gallery .wide { grid-column: 1 / -1; }
+  .gallery .shot:not(.wide) .frame { aspect-ratio: 16 / 11 !important; }
+  .gallery .frame img { object-position: left top; }
+  .shot figcaption b { color: var(--ink); font-weight: 600; }
+  @media (max-width: 900px) {
+    .split, .pair.light, .gallery { grid-template-columns: minmax(0, 1fr); }
+    .split > div + div { border-left: 0; border-top: 1px solid #d9d7d2; }
+    .users { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .users > div:nth-child(3) { border-left: 0; }
+    .users > div:nth-child(n+3) { border-top: 1px solid #d9d7d2; }
+  }
+  @media (max-width: 520px) { .users { grid-template-columns: minmax(0, 1fr); } .users > div + div { border-left: 0; border-top: 1px solid #d9d7d2; } }
+  /* ===== v5 storytelling blocks ===== */
+  .h2.wide { max-width: 34ch; }
+  .ctx { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .ctx .lede { max-width: 34rem; }
+  .ctx-img .frame { border-radius: 18px; cursor: zoom-in; }
+  .highlight { text-align: center; font-family: var(--display); font-weight: 600; font-size: clamp(1.3rem, 2.3vw, 1.85rem); line-height: 1.45; color: var(--ink); max-width: 48ch; margin: 0 auto; }
+  .highlight span { display: block; color: var(--pink); }
+  .role-strip { max-width: 760px; margin: 36px auto 0; text-align: center; background: var(--rose); padding: 14px 20px; font-size: 1rem; color: var(--ink); }
+  .numcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 40px; }
+  .numcols > div { border-top: 2px solid var(--ink); padding-top: 18px; }
+  .numcols .big { font-family: var(--display); font-weight: 600; font-size: 2.2rem; line-height: 1; color: var(--pink); }
+  .numcols h3 { font-family: var(--display); font-weight: 600; font-size: 1.15rem; margin-top: 18px; }
+  .numcols p { margin-top: 10px; color: var(--grey); font-size: 1rem; line-height: 1.6; }
+  .found { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 24px; margin-top: 40px; align-items: start; }
+  .found-a { background: var(--pinkc); border-radius: 20px; padding: 30px; }
+  .found-b { border: 1px solid var(--line); border-radius: 20px; padding: 30px; }
+  .fh { font-family: var(--display); font-weight: 600; font-size: 1.1rem; color: var(--ink); margin-bottom: 18px; }
+  .fh.muted { color: var(--grey); margin-top: 26px; }
+  .ficon { width: 46px; height: 46px; border-radius: 50%; background: #fff; display: grid; place-items: center; font: 600 1rem var(--display); color: var(--pink); }
+  .found-b .ficon { background: var(--cream); border: 1px solid var(--line); }
+  .found h3 { font-family: var(--display); font-weight: 600; font-size: 1.1rem; margin-top: 16px; }
+  .found p:not(.fh) { margin-top: 8px; font-size: .98rem; line-height: 1.55; color: var(--body); }
+  .fgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 28px; }
+  .chipcard { margin-top: 24px; border: 1px solid var(--line); border-radius: 20px; padding: 30px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chips li { border: 1px solid var(--ink); border-radius: 999px; padding: 8px 16px; font: 500 .8rem/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink); }
+  .problem-box { margin-top: clamp(56px, 7vw, 88px); background: var(--ink); color: var(--cream); border-radius: 22px; padding: clamp(28px, 4vw, 48px); }
+  .problem-box .pk { font: 500 .8rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--pink); }
+  .problem-box p:not(.pk) { margin-top: 14px; font-family: var(--display); font-weight: 600; font-size: clamp(1.25rem, 2.2vw, 1.75rem); line-height: 1.4; max-width: 52ch; }
+  .refl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 40px; }
+  .refl .card { border-radius: 18px; }
+  .refl .rn { font: 500 .9rem var(--mono); color: var(--pink); }
+  .refl h3 { font-family: var(--display); font-weight: 600; font-size: 1.15rem; margin: 10px 0 8px; }
+  .principles .card, .more-card, .cards .card { border-radius: 18px; }
+  @media (max-width: 900px) {
+    .ctx, .found, .numcols, .refl { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 520px) { .fgrid { grid-template-columns: minmax(0, 1fr); } }
+  /* ===== photo carousel ===== */
+  .marquee { display: flex; overflow: hidden; margin-top: 40px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .mtrack { display: flex; gap: 18px; padding-right: 18px; flex: none; animation: slide 54s linear infinite; }
+  .mtrack li { flex: none; }
+  .mtrack img { height: clamp(220px, 28vw, 340px); width: auto; border-radius: 18px; object-fit: cover; }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+    .mtrack { animation: none; }
+    .mtrack[aria-hidden="true"] { display: none; }
+  }
+  .doc-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .doc-img { width: 100%; max-width: 420px; justify-self: center; }
+  @media (max-width: 900px) { .doc-row { grid-template-columns: minmax(0, 1fr); } .doc-img { max-width: 320px; } }
+  .gap-cmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 32px; }
+  .gc { border-radius: 18px; padding: 24px 26px; border: 1px solid var(--line); }
+  .gc.ok { background: #eef8f1; border-color: #cfe9d8; }
+  .gc.miss { background: var(--pinkc); border-color: #f3c9d5; }
+  .gl { display: flex; align-items: center; gap: 10px; font: 600 .8rem/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .gl .dot { width: 10px; height: 10px; border-radius: 50%; background: #2e9e5b; flex: none; }
+  .gc.miss .gl .dot { background: var(--pink); }
+  .gt { margin-top: 12px; font-family: var(--display); font-weight: 500; font-size: clamp(1.05rem, 1.5vw, 1.25rem); line-height: 1.45; color: var(--ink); }
+  .gap-risk { margin-top: 24px; border-left: 3px solid var(--pink); padding: 4px 0 4px 22px; font-family: var(--serif); font-variation-settings: "SOFT" 0, "WONK" 1; font-weight: 500; font-size: clamp(1.15rem, 1.8vw, 1.4rem); line-height: 1.45; color: var(--ink); max-width: none; }
+  .gap-risk b { display: block; margin-bottom: 6px; font: 600 .9rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--pink); }
+  @media (max-width: 760px) { .gap-cmp { grid-template-columns: minmax(0, 1fr); } }
+  .split.tone > div:first-child .label { color: #1f6fb8; }
+  .split.tone > div:last-child .label { color: var(--pink); }
   /* back button: fixed pill that returns to the portfolio home screen */
   .backhome { position: fixed; top: max(16px, env(safe-area-inset-top, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); z-index: 55; display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 18px 0 14px; border-radius: 999px; background: rgba(255, 255, 255, .88); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border: 1px solid var(--line-2); box-shadow: 0 8px 24px -12px rgba(20, 21, 27, .4); color: var(--ink); font: 600 .875rem/1 var(--sans); text-decoration: none; transition: background-color .2s, box-shadow .2s; }
   .backhome svg { width: 16px; height: 16px; transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
@@ -389,6 +484,10 @@
   .hmw { font-size: clamp(1.15rem, 1.7vw, 1.5rem); margin-top: clamp(44px, 5.5vw, 72px); }
   .closing .big { font-size: clamp(1.6rem, 2.8vw, 2.4rem); }
   .closing .next { font-size: clamp(1.1rem, 1.6vw, 1.35rem); }
+  .highlight { font-size: clamp(1.15rem, 1.9vw, 1.5rem); }
+  .problem-box p:not(.pk) { font-size: clamp(1.1rem, 1.8vw, 1.4rem); }
+  .hmw-card p:not(.label) { font-size: clamp(1.1rem, 1.7vw, 1.35rem); }
+  .numcols .big { font-size: 1.9rem; }
 </style>
 </head>
 <body>
@@ -427,96 +526,82 @@
   </div>
 </header>
 
-<!-- ================= AT A GLANCE ================= -->
-<section class="sec" aria-label="Project summary">
-  <div class="wrap">
-    <div class="cards c3" style="margin-top: 0;">
-      <div class="card y">
-        <p class="label">The problem</p>
-        <p>The client's welfare benefits ran on paper. To claim, an employee checked the rules in a long policy document, filled in a form and worked out the amount by hand.</p>
-      </div>
-      <div class="card b">
-        <p class="label">My role</p>
-        <p>I was a UX/UI design intern on the project for a month. I designed the scheme application flow and its edge cases, explored retiree onboarding, and read the scheme rulebooks to work out what each screen needed.</p>
-      </div>
-      <div class="card p">
-        <p class="label">The result</p>
-        <p>The same five-step application works for every scheme. The portal was due to go live at the end of my internship.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= 00 CONTEXT ================= -->
+<!-- ================= CONTEXT ================= -->
 <section class="sec" id="context" aria-labelledby="context-h">
-  <div class="wrap">
-    <p class="kicker">00 · Context</p>
-    <h2 class="h2" id="context-h">A welfare benefits system for one of India's largest conglomerates.</h2>
-    <p class="lede">The client is a large Indian group with many companies under it and more than 30,000 employees. It runs its own welfare benefits for employees, retirees and their families, from medical and hospitalisation cover to scholarships.</p>
-    <p class="lede">Until this project, all of it ran by hand. An employee who wanted to claim for a hospital stay had to read the rules, fill in a paper form and attach the bills. There was no old system to redesign, so the portal was designed from scratch.</p>
+  <div class="wrap ctx">
+    <div>
+      <p class="kicker">Context</p>
+      <h2 class="h2" id="context-h">Welfare benefits for a company of 30,000+ people</h2>
+      <p class="lede">I spent my internship designing for one of India's largest conglomerates. Its employees, retirees and their families use this portal to claim welfare benefits, from medical cover to scholarships.</p>
+      <p class="lede">Before the portal, every claim was manual. People read the policy, filled in a paper form, attached their bills and sent it all in.</p>
+      <p class="lede">The task was to bring every scheme into one portal and keep each one's eligibility rules and exceptions intact.</p>
+    </div>
+    <figure class="shot ctx-img"><div class="frame" style="--ar: 1440 / 924"><img src="assets/gal-home.webp" alt="Home page of the benefits portal with a greeting, recent claims and scheme categories." loading="lazy"></div></figure>
+  </div>
+</section>
 
-    <div class="cards c3">
-      <div class="card"><span class="tag">Medical</span><h3>Hospitalisation and treatment</h3><p>Support for employees and their families.</p></div>
-      <div class="card"><span class="tag">Education</span><h3>Academic support</h3><p>Scholarships and help with children's education.</p></div>
-      <div class="card"><span class="tag">Sports &amp; skills</span><h3>Training and achievement</h3><p>Support for sports training and competition.</p></div>
+<section class="sec" aria-label="The project in one line">
+  <div class="wrap">
+    <p class="highlight"><span>There was no old system to redesign.</span> Our job was to build the whole thing from scratch, starting from an 80-page rulebook.</p>
+    <p class="role-strip"><b>My part:</b> I worked on translating complex welfare policies into clear claim journeys, resolving gaps in existing designs, and exploring a separate onboarding experience for retired employees.</p>
+  </div>
+</section>
+
+<!-- ================= RESEARCH ================= -->
+<section class="sec" id="research" aria-labelledby="research-h">
+  <div class="wrap">
+    <div class="doc-row">
+      <div>
+        <p class="kicker">Research</p>
+        <h2 class="h2" id="research-h">Before designing, I read the rulebook the way an employee would</h2>
+        <p class="lede">The client handed us their scheme rulebooks: more than 80 pages of rules, limits and paper claim forms.</p>
+      </div>
+      <img class="doc-img" src="assets/rulebook.webp" alt="Cover and an inside page of the client's welfare scheme rulebook." loading="lazy">
+    </div>
+    <div class="numcols">
+      <div><span class="big">1</span><h3>Reading every scheme</h3><p>Each scheme had its own eligibility, limits, documents and approvals. I went through them one by one.</p></div>
+      <div><span class="big">2</span><h3>Asking the same five questions</h3><p>Who can apply? What's covered? What details, what proof, and what happens after? Asking these of every scheme made them easy to compare.</p></div>
+      <div><span class="big">3</span><h3>Flagging rules that didn't fit</h3><p>Some rules clashed with their own scheme. I noted each one and took it to the team before drawing the screen.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ================= 01 PROBLEM ================= -->
+<!-- ================= WHAT CAME UP ================= -->
 <section class="sec" id="problem" aria-labelledby="problem-h">
   <div class="wrap">
-    <p class="kicker">01 · Problem</p>
-    <h2 class="h2" id="problem-h">Every rule lived in one 80-page policy document.</h2>
-    <p class="lede">The client is paying out money, so each scheme checks a lot before it pays: who is eligible, how much they can get and what proof they need. My team received all of it as a rulebook of more than 80 pages.</p>
+    <p class="kicker">Research · What came up</p>
+    <h2 class="h2 wide" id="problem-h">Most of the difficulty was hidden inside the rules</h2>
+    <p class="lede">The client is paying out money, so every scheme checks a lot before it pays. Employees had to work all of it out on their own.</p>
 
-    <div class="cards c2">
-      <div class="card y">
-        <p class="label">What the document held</p>
-        <p>Each scheme had its own eligibility criteria, limits, documents and approval steps. An employee had to find the right scheme and read its rules before applying.</p>
+    <div class="found">
+      <div class="found-a">
+        <p class="fh">A rule that didn't fit</p>
+        <div class="ficon">?</div>
+        <h3>Who counts as a student?</h3>
+        <p>One scholarship pays only for UGC or government-recognised courses. The same scheme also lists professional courses like CA, which the UGC doesn't approve.</p>
+        <p>The document never says what happens to a CA student.</p>
       </div>
-      <div class="card p">
-        <p class="label">Where the rules clashed</p>
-        <p>Some rules didn't fit the scheme they belonged to. One education scheme pays for courses recognised by the UGC or the government, yet it also lists professional courses such as CA, which the UGC doesn't approve. The document never says what happens to a CA student.</p>
+      <div class="found-b">
+        <p class="fh">What we found</p>
+        <div class="fgrid">
+          <div><div class="ficon">1</div><h3>Finding the right scheme</h3><p>The first question was always "which scheme is mine?"</p></div>
+          <div><div class="ficon">2</div><h3>Knowing if you qualify</h3><p>Service years, age, family member and insurance all change the answer.</p></div>
+          <div><div class="ficon">3</div><h3>Knowing what to send</h3><p>Each scheme wants its own bills, reports and certificates.</p></div>
+          <div><div class="ficon">4</div><h3>Waiting without updates</h3><p>A claim passed several reviews the employee couldn't see.</p></div>
+        </div>
       </div>
     </div>
 
-    <p class="pinquote"><img src="assets/pin.png" alt="" width="46" height="46">My main task was to take these rules, gaps included, and explain them to an employee clearly enough that they could apply on their own.</p>
-
-    <h3 class="h3" style="margin-top: clamp(64px, 8vw, 96px);">For one claim, an employee had to answer four questions.</h3>
-    <div class="q4">
-      <div><span class="n">01</span><h3>Which scheme applies to me?</h3><p>Several schemes overlap in what they cover.</p></div>
-      <div><span class="n">02</span><h3>Am I eligible?</h3><p>It depends on employment status, years of service, which family member is claiming, age and insurance.</p></div>
-      <div><span class="n">03</span><h3>What do I submit?</h3><p>Each scheme asks for its own bills, reports and certificates.</p></div>
-      <div><span class="n">04</span><h3>What happens next?</h3><p>The claim goes through several reviews before payment, and the employee can't see any of them.</p></div>
+    <div class="chipcard">
+      <p class="fh">Every claim has to answer</p>
+      <ul class="chips"><li>Who is it for?</li><li>Am I eligible?</li><li>How much can I get?</li><li>What do I upload?</li><li>Where is my claim?</li></ul>
+      <p class="fh muted">And some people need extra help</p>
+      <ul class="chips"><li>Retired employees</li><li>Spouses and children</li><li>Families of deceased employees</li></ul>
     </div>
 
-    <p class="hmw">How might the portal explain these rules so that an employee can apply without help?</p>
-  </div>
-</section>
-
-<!-- ================= 02 APPROACH ================= -->
-<section class="sec" id="approach" aria-labelledby="approach-h">
-  <div class="wrap">
-    <p class="kicker">02 · Approach</p>
-    <h2 class="h2" id="approach-h">I read every scheme through the same five questions.</h2>
-    <p class="lede">Asking each scheme the same questions let me compare them, even though their rules differ.</p>
-
-    <div class="qlist">
-      <div class="qrow s head" aria-hidden="true"><span></span><span>Question</span><span>On screen</span></div>
-      <div class="qrow s"><span class="n">01</span><h3>Who is eligible?</h3><p class="to">Beneficiary selection and eligibility states</p></div>
-      <div class="qrow s"><span class="n">02</span><h3>What is covered?</h3><p class="to">Scheme details with the limits shown up front</p></div>
-      <div class="qrow s"><span class="n">03</span><h3>What information is needed?</h3><p class="to">Short form steps</p></div>
-      <div class="qrow s"><span class="n">04</span><h3>What evidence is needed?</h3><p class="to">A document checklist</p></div>
-      <div class="qrow s"><span class="n">05</span><h3>What happens next?</h3><p class="to">A claim number, a letter and a tracker</p></div>
-    </div>
-
-    <div class="tflow">
-      <div class="card y"><p class="label">Client scheme document</p><p>Eligibility, limits, documents and process.</p></div>
-      <div class="joint" aria-hidden="true"></div>
-      <div class="card b"><p class="label">Scenarios &amp; decisions</p><p>Who qualifies, and what happens when a condition isn't met.</p></div>
-      <div class="joint" aria-hidden="true"></div>
-      <div class="card p"><p class="label">UI behaviour</p><p>Selections, conditional fields, guidance and states.</p></div>
+    <div class="problem-box">
+      <p class="pk">Problem</p>
+      <p>To make one claim, an employee had to decode an 80-page rulebook alone. They couldn't tell which scheme applied, whether they qualified or what to send, and an incomplete claim could be rejected.</p>
     </div>
   </div>
 </section>
@@ -524,9 +609,9 @@
 <!-- ================= 03 STORY 01 ================= -->
 <section class="sec" id="application" aria-labelledby="application-h">
   <div class="wrap">
-    <p class="kicker">03 · Story 01 · Guided application</p>
-    <h2 class="h2" id="application-h">I split the claim form into five steps.</h2>
-    <p class="lede">The steps are the same for every scheme. Only the fields inside each step change.</p>
+    <p class="kicker">What I designed · 01</p>
+    <h2 class="h2" id="application-h">I turned the claim form into five short steps</h2>
+    <p class="lede">The steps stay the same for every scheme. Only the fields inside them change.</p>
     <p class="owned">My part: flow structure, UI and edge cases</p>
 
     <div class="pills" aria-label="The five steps of a claim">
@@ -537,9 +622,15 @@
       <span class="pill">05 Review</span>
     </div>
 
+    <div class="principles">
+      <div class="card c"><h3>Beneficiary first</h3><p>Schemes cover employees, spouses or children, so the claim starts with who it's for.</p></div>
+      <div class="card c"><h3>Progressive disclosure</h3><p>Short steps in place of one long form.</p></div>
+      <div class="card c"><h3>Dedicated evidence step</h3><p>Documents get their own step, so the employee knows exactly what to upload.</p></div>
+      <div class="card c"><h3>Review before submission</h3><p>One last look at the claim, the person and the bank account.</p></div>
+    </div>
+
     <div class="step" id="step-1">
-      <div class="step-head"><span class="step-no" aria-hidden="true">1</span><h3 class="h3">Step 1: choose who the claim is for.</h3></div>
-      <p class="step-body">Schemes cover different family members, so the rest of the form depends on this choice.</p>
+      <div class="step-head"><span class="step-no" aria-hidden="true">1</span><h3 class="h3">Choose who the claim is for.</h3></div>
       <div class="anno">
         <figure class="shot">
           <div class="frame" style="--ar: 2160 / 1386"><img src="assets/screen-01-beneficiary.webp" alt="Beneficiary step with read-only employee details, a beneficiary dropdown and a saved bank account." loading="lazy">
@@ -550,20 +641,14 @@
         </figure>
         <ol class="notes">
           <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">Employee details are filled in from the profile.</p></div></li>
-          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">If a family member is missing, a link goes straight to Profile Settings.</p></div></li>
+          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">A missing family member links straight to Profile Settings.</p></div></li>
           <li data-n="3" tabindex="0"><span class="n" aria-hidden="true">3</span><div><p class="d">Money goes to a saved bank account instead of a cancelled cheque.</p></div></li>
         </ol>
       </div>
     </div>
 
-    <div class="step" id="step-2">
-      <div class="step-head"><span class="step-no" aria-hidden="true">2</span><h3 class="h3">Step 2: add the diagnosis, hospital and dates.</h3></div>
-      <p class="step-body">The medical details sit together in one short step.</p>
-    </div>
-
     <div class="step" id="step-3">
-      <div class="step-head"><span class="step-no" aria-hidden="true">3</span><h3 class="h3">Step 3: list the bills.</h3></div>
-      <p class="step-body">Each bill gets its own row, and the portal subtracts anything insurance has already paid.</p>
+      <div class="step-head"><span class="step-no" aria-hidden="true">3</span><h3 class="h3">List the bills, and let the portal do the maths.</h3></div>
       <div class="anno">
         <figure class="shot">
           <div class="frame" style="--ar: 2160 / 2142"><img src="assets/screen-03-claim-details-no.webp" alt="Claim details step with itemised bills, a question about other cover and the claimable total." loading="lazy">
@@ -574,15 +659,14 @@
         </figure>
         <ol class="notes">
           <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">Each bill has its own attachment.</p></div></li>
-          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">One question asks whether insurance or another benefit paid part of the cost.</p></div></li>
-          <li data-n="3" tabindex="0"><span class="n" aria-hidden="true">3</span><div><p class="d">The claim total updates as the employee types.</p></div></li>
+          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">One question asks whether insurance already paid part of it.</p></div></li>
+          <li data-n="3" tabindex="0"><span class="n" aria-hidden="true">3</span><div><p class="d">The total updates as the employee types.</p></div></li>
         </ol>
       </div>
     </div>
 
     <div class="step" id="step-4">
-      <div class="step-head"><span class="step-no" aria-hidden="true">4</span><h3 class="h3">Step 4: upload the documents.</h3></div>
-      <p class="step-body">Each document the scheme asks for has its own slot, so a missing one is easy to spot before submitting.</p>
+      <div class="step-head"><span class="step-no" aria-hidden="true">4</span><h3 class="h3">Upload each document into its own slot.</h3></div>
       <div class="anno">
         <figure class="shot">
           <div class="frame" style="--ar: 2160 / 1473"><img src="assets/screen-04-documents.webp" alt="Documents step with a named upload slot for each required document." loading="lazy">
@@ -591,15 +675,14 @@
           </div>
         </figure>
         <ol class="notes">
-          <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">Accepted file types and the 5 MB limit are listed above the slots.</p></div></li>
-          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">Each slot is labelled with the document it needs.</p></div></li>
+          <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">File types and the 5 MB limit sit above the slots.</p></div></li>
+          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">A missing document is easy to spot before submitting.</p></div></li>
         </ol>
       </div>
     </div>
 
     <div class="step" id="step-5">
-      <div class="step-head"><span class="step-no" aria-hidden="true">5</span><h3 class="h3">Step 5: review and submit.</h3></div>
-      <p class="step-body">The employee checks the patient, the amount and the bank account on one page before submitting.</p>
+      <div class="step-head"><span class="step-no" aria-hidden="true">5</span><h3 class="h3">Review everything on one page, then submit.</h3></div>
       <div class="anno">
         <figure class="shot">
           <div class="frame" style="--ar: 2160 / 1602"><img src="assets/screen-05-review.webp" alt="Review step with a claim summary, the bank account and two declaration checkboxes." loading="lazy">
@@ -608,17 +691,17 @@
           </div>
         </figure>
         <ol class="notes">
-          <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">The claimed amount is the most prominent number on the page.</p></div></li>
-          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">The two declarations from the paper form are now checkboxes.</p></div></li>
+          <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">The claimed amount is the most prominent number.</p></div></li>
+          <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">The paper form's declarations are now two checkboxes.</p></div></li>
         </ol>
       </div>
     </div>
 
-    <h3 class="h3" style="margin-top: clamp(72px, 8vw, 104px);">After submitting, the employee gets a claim number, a letter and a tracker.</h3>
+    <h3 class="h3" style="margin-top: clamp(72px, 8vw, 104px);">After submitting: a claim number, a letter and a tracker.</h3>
     <div class="trio">
-      <figure class="shot"><div class="frame" style="--ar: 1125 / 720"><img src="assets/screen-06-submitted.webp" alt="Confirmation dialog with the claim number and a prompt to download the acknowledgement letter." loading="lazy"></div><figcaption>The claim number appears as soon as the claim goes in.</figcaption></figure>
-      <figure class="shot"><div class="frame" style="--ar: 2160 / 1736"><img src="assets/screen-07-acknowledgement.webp" alt="Acknowledgement letter with a document tick list and a cut-out courier label." loading="lazy"></div><figcaption>The employee prints this letter and couriers it with the original bills.</figcaption></figure>
-      <figure class="shot"><div class="frame" style="--ar: 2160 / 1500"><img src="assets/screen-08-tracking.webp" alt="Claim tracking page with a journey of review stages." loading="lazy"></div><figcaption>The tracker shows which review stage the claim is at.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 1125 / 720"><img src="assets/screen-06-submitted.webp" alt="Confirmation dialog with the claim number and a prompt to download the acknowledgement letter." loading="lazy"></div><figcaption>The claim number appears straight away.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 2160 / 1736"><img src="assets/screen-07-acknowledgement.webp" alt="Acknowledgement letter with a document tick list and a cut-out courier label." loading="lazy"></div><figcaption>A printable letter goes in the courier envelope with the original bills.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 2160 / 1500"><img src="assets/screen-08-tracking.webp" alt="Claim tracking page with a journey of review stages." loading="lazy"></div><figcaption>The tracker shows which review the claim is at.</figcaption></figure>
     </div>
   </div>
 </section>
@@ -626,9 +709,9 @@
 <!-- ================= 04 STORY 02 ================= -->
 <section class="sec" id="exceptions" aria-labelledby="exceptions-h">
   <div class="wrap">
-    <p class="kicker">04 · Story 02 · Exceptions</p>
-    <h2 class="h2" id="exceptions-h">Some claims are partly paid by insurance first.</h2>
-    <p class="lede">Most schemes only pay what's left after insurance. I handled this with one Yes or No question inside the claim form.</p>
+    <p class="kicker">What I designed · 02</p>
+    <h2 class="h2" id="exceptions-h">What if insurance already paid part of the bill?</h2>
+    <p class="lede">Most schemes only pay what's left after insurance. One Yes or No question handles it inside the form.</p>
     <p class="owned">My part: edge-case logic and UI</p>
   </div>
   <div class="band">
@@ -648,7 +731,7 @@
       </div>
       <ol class="notes">
         <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">Each payment received needs its own proof.</p></div></li>
-        <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">A reminder to upload the insurance settlement certificate shows up only when it's needed.</p></div></li>
+        <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">A reminder for the insurance settlement certificate appears only when it's needed.</p></div></li>
       </ol>
     </div>
   </div>
@@ -657,46 +740,91 @@
 <!-- ================= 05 STORY 03 ================= -->
 <section class="sec" id="retirees" aria-labelledby="retirees-h">
   <div class="wrap">
-    <p class="kicker">05 · Story 03 · Retiree onboarding</p>
-    <h2 class="h2" id="retirees-h">Retirees needed their own way to sign in.</h2>
-    <p class="lede">Active employees log in with their company HR account, which retirees lose when they leave. Five of the seven medical schemes still cover retirees, so they needed another way in.</p>
-    <p class="owned">My part: flow exploration and onboarding UI</p>
+    <p class="kicker">What I designed · 03</p>
+    <h2 class="h2" id="retirees-h">Retirees needed a different onboarding flow</h2>
+    <div class="split tone">
+      <div><p class="label">Active employees</p><p>HRMS profiles automatically populate the portal with family and employment details used to determine scheme eligibility.</p></div>
+      <div><p class="label">Retirees</p><p>Without these records, they had to provide their information from scratch.</p></div>
+    </div>
+    <p class="gap-risk"><b>The risk</b> Without it, the portal couldn't accurately determine their eligibility, potentially preventing them from accessing benefits they qualified for.</p>
+    <p class="owned">My contribution · Registration flows and profile completion</p>
 
     <div class="cards c2">
       <div class="card y">
         <span class="tag">Matches the final dashboard</span>
-        <h3>Option A: approve access first, then fill in the profile.</h3>
-        <p>Retirees register with proof of retirement and get approved. They add family and bank details after they log in.</p>
+        <h3>Option A: approve access first, fill in the profile later.</h3>
+        <p>A short registration with proof of retirement, then family and bank details after login.</p>
       </div>
       <div class="card b">
         <span class="tag ink">Explored</span>
         <h3>Option B: collect everything at registration.</h3>
-        <p>One approval covers the whole profile, but every retiree has to get through a long form first.</p>
+        <p>One approval covers everything, but every retiree faces a long first form.</p>
       </div>
     </div>
 
-    <div class="anno" style="margin-top: 56px;">
+    <div class="pair light">
       <figure class="shot">
-        <div class="frame" style="--ar: 2160 / 1386"><img src="assets/screen-09-welcome.webp" alt="Welcome dialog after activation with a profile checklist and Maybe Later and Complete Now buttons." loading="lazy">
-          <span class="pin" data-n="1" style="--x: 35%; --y: 54.7%" aria-hidden="true">1</span>
-          <span class="pin" data-n="2" style="--x: 67.6%; --y: 73.6%" aria-hidden="true">2</span>
-          <span class="pin" data-n="3" style="--x: 33%; --y: 81.1%" aria-hidden="true">3</span>
-        </div>
+        <div class="frame" style="--ar: 1440 / 973"><img src="assets/retiree-register.webp" alt="Retired employee registration, step 2 of 3, with contact details, bank details and a document upload." loading="lazy"></div>
+        <figcaption>Step 2 of 3 collects contact and bank details, with the three stages shown on the left.</figcaption>
       </figure>
-      <ol class="notes">
-        <li data-n="1" tabindex="0"><span class="n" aria-hidden="true">1</span><div><p class="d">Family details are marked optional, since every household is different.</p></div></li>
-        <li data-n="2" tabindex="0"><span class="n" aria-hidden="true">2</span><div><p class="d">A notice explains that some schemes need family details.</p></div></li>
-        <li data-n="3" tabindex="0"><span class="n" aria-hidden="true">3</span><div><p class="d">Maybe Later lets the user start using the portal straight away.</p></div></li>
-      </ol>
+      <figure class="shot">
+        <div class="frame" style="--ar: 1440 / 1133"><img src="assets/retiree-summary.webp" alt="Registration summary with employment details, uploaded documents and declarations." loading="lazy"></div>
+        <figcaption>The summary goes for verification before access opens.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
-<!-- ================= 06 OUTCOME ================= -->
+<!-- ================= REVIEWER SIDE ================= -->
+<section class="sec" id="review" aria-labelledby="review-h">
+  <div class="wrap">
+    <p class="kicker">The other side of a claim</p>
+    <h2 class="h2" id="review-h">How the PMS team checks each claim</h2>
+    <p class="lede">Every claim lands with a PMS scrutiniser first. They check it, then send it on to the sub-panel, the apex panel and finance.</p>
+
+    <figure class="shot" style="margin-top: 40px;">
+      <div class="frame" style="--ar: 1440 / 1436"><img src="assets/review-dashboard.webp" alt="Scrutiniser dashboard with counts of new, in-review, query-raised, rejected and approved claims above a table of applications." loading="lazy"></div>
+      <figcaption><b>The scrutiniser's dashboard.</b> Counts at the top show what's new, what's waiting on the employee and what's done. Below, every application with its scheme, amount and stage.</figcaption>
+    </figure>
+
+    <div class="pair light">
+      <figure class="shot">
+        <div class="frame" style="--ar: 1440 / 1240"><img src="assets/review-claim-top.webp" alt="Claim review page with a stage tracker, claim overview, a passed system check and the employee's details." loading="lazy"></div>
+        <figcaption><b>Opening a claim.</b> A tracker shows the stage, and a system check confirms eligibility, limits and uploads before the reviewer starts.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame" style="--ar: 1020 / 1380"><img src="assets/review-claim-check.webp" alt="Bills table with tick and flag controls, deductions, other insurance, and the system-calculated amount beside an editable approved amount." loading="lazy"></div>
+        <figcaption><b>Checking the money.</b> Each bill can be ticked or flagged. The system works out the amount, and the panel member enters the final figure.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 MORE SCREENS ================= -->
+<section class="sec" id="screens" aria-labelledby="screens-h">
+  <div class="wrap">
+    <p class="kicker">More screens</p>
+    <h2 class="h2" id="screens-h">A few more screens from the portal</h2>
+    <p class="lede">Tap any screen to see it full size.</p>
+
+    <div class="gallery">
+      <figure class="shot wide"><div class="frame" style="--ar: 1440 / 924"><img src="assets/gal-home.webp" alt="Home page with a greeting, recent claims, scheme categories and quick access to the profile." loading="lazy"></div><figcaption><b>Home.</b> Recent claims, scheme categories and a profile progress reminder.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 1440 / 1010"><img src="assets/gal-schemes.webp" alt="Scheme catalogue in a grid, with category filters, balances and Apply or Not Eligible buttons." loading="lazy"></div><figcaption><b>Choosing a scheme.</b> Filters, an eligible-only toggle and the balance left on each scheme.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 1440 / 1010"><img src="assets/gal-eligibility.webp" alt="Scheme eligibility matrix listing each scheme's service rule, income limit, balance and an Apply button." loading="lazy"></div><figcaption><b>Eligibility matrix.</b> Which schemes this employee qualifies for, and why.</figcaption></figure>
+      <figure class="shot wide"><div class="frame" style="--ar: 2160 / 818"><img src="assets/screen-11-scheme-detail.webp" alt="Scheme detail page with summary cards, tabs and Apply Now." loading="lazy"></div><figcaption><b>Scheme details.</b> Cover, limits and the main condition before applying.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 1440 / 1197"><img src="assets/gal-profile.webp" alt="My Profile page listing the employee's personal and contact information." loading="lazy"></div><figcaption><b>Employee profile.</b> Every detail the schemes check, synced from the HR system.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 1440 / 1229"><img src="assets/gal-claims.webp" alt="My Claims list with claim numbers, who each claim is for, dates, amounts and status." loading="lazy"></div><figcaption><b>My claims.</b> Every claim with its status in one list.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 1440 / 874"><img src="assets/gal-setup-employment.webp" alt="Profile setup, step 1, collecting employment details." loading="lazy"></div><figcaption><b>Profile setup.</b> Employment details come first.</figcaption></figure>
+      <figure class="shot"><div class="frame" style="--ar: 1440 / 874"><img src="assets/gal-setup-family.webp" alt="Profile setup, final step, collecting spouse and child details." loading="lazy"></div><figcaption><b>Profile setup.</b> Spouse and children close the setup.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 OUTCOME ================= -->
 <section class="sec" id="impact" aria-labelledby="impact-h">
   <div class="wrap">
-    <p class="kicker">06 · Outcome</p>
-    <h2 class="h2" id="impact-h">What changes for the employee.</h2>
+    <p class="kicker">Outcome</p>
+    <h2 class="h2" id="impact-h">What changes for the employee</h2>
     <table class="ba">
       <thead><tr><th>Moment</th><th>On paper</th><th>In the portal</th></tr></thead>
       <tbody>
@@ -709,21 +837,21 @@
   </div>
 </section>
 
-<!-- ================= 07 REFLECTION ================= -->
+<!-- ================= REFLECTION ================= -->
 <section class="sec" id="reflection" aria-labelledby="reflection-h">
   <div class="wrap">
-    <p class="kicker">07 · Reflection</p>
-    <h2 class="h2" id="reflection-h">What I learned.</h2>
-    <div class="cards c3">
-      <div class="card"><h3>Reading the rules came first.</h3><p>Most screen decisions came from a specific clause in the rulebook.</p></div>
-      <div class="card"><h3>Unclear rules became questions.</h3><p>When a clause was vague, I took it to the team, and their answer shaped the screen.</p></div>
-      <div class="card"><h3>Paper steps needed design too.</h3><p>Claims still end with a courier envelope, so the printable letter was part of the flow.</p></div>
+    <p class="kicker">Reflection</p>
+    <h2 class="h2" id="reflection-h">What I took away from this internship</h2>
+    <div class="refl">
+      <div class="card"><p class="rn">01</p><h3>The rulebook was the real brief</h3><p>Most of my screen decisions came from a single line in the policy document.</p></div>
+      <div class="card"><p class="rn">02</p><h3>A confusing rule is a design question</h3><p>When a rule didn't fit, I took it to the team before drawing anything.</p></div>
+      <div class="card"><p class="rn">03</p><h3>Some steps stay on paper</h3><p>Original bills still go by courier, so the printable letter became part of the flow.</p></div>
     </div>
   </div>
 </section>
 
 <!-- ================= MORE ================= -->
-<section class="sec last" id="more" aria-labelledby="more-h">
+<section class="sec" id="more" aria-labelledby="more-h">
   <div class="wrap">
     <div class="card b more-card">
       <p class="label">There's more in the file</p>
@@ -734,7 +862,20 @@
   </div>
 </section>
 
+<!-- ================= PHOTOS ================= -->
+<section class="sec last" id="photos" aria-labelledby="photos-h">
+  <div class="wrap">
+    <p class="kicker">Behind the screens</p>
+    <h2 class="h2" id="photos-h">A few moments from my internship</h2>
+  </div>
+  <div class="marquee" aria-label="Photos from the internship">
+    <ul class="mtrack"><li><img src="assets/photos/photo-01.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-02.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-03.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-04.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-05.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-06.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-07.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-08.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-09.webp" alt="Photo from the internship" loading="lazy"></li></ul>
+    <ul class="mtrack" aria-hidden="true"><li><img src="assets/photos/photo-01.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-02.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-03.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-04.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-05.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-06.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-07.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-08.webp" alt="Photo from the internship" loading="lazy"></li><li><img src="assets/photos/photo-09.webp" alt="Photo from the internship" loading="lazy"></li></ul>
+  </div>
+</section>
+
 </main>
+
 
 <footer class="closing">
   <div class="wrap">
