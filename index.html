@@ -324,6 +324,10 @@
   .sheet__kind { font-size: var(--fs-sm); line-height: 20px; color: var(--muted); }
   .sheet__close { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--bg); transition: background-color .2s; }
   .sheet__close:hover { background: var(--line); }
+  .sheet__acts { display: flex; align-items: center; gap: 10px; }
+  .sheet__dl { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 16px 0 13px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: var(--fs-sm); font-weight: 500; line-height: 1; transition: opacity .2s; }
+  .sheet__dl:hover { opacity: .85; }
+  .sheet__dl svg { width: 16px; height: 16px; }
   .sheet__close:focus-visible { border-radius: 50%; outline-offset: 2px; }
   .sheet__scroll { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 12px 36px 36px; }
   .sheet__title { font-size: var(--fs-lg); font-weight: 500; line-height: 28px; text-wrap: balance; }
@@ -403,6 +407,11 @@
   :is(.projs--featured, .projs--more) .proj__title { padding-right: 40px; }
   :is(.projs--featured, .projs--more) .proj__desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
   :is(.projs--featured, .projs--more) .proj__tags { margin-top: 12px; }
+  /* slightly smaller type inside the cards: title 15px, description 13px, tags 11px */
+  :is(.projs--featured, .projs--more) .proj__title { font-size: 15px; line-height: 22px; }
+  :is(.projs--featured, .projs--more) .proj__desc { font-size: 13px; line-height: 19px; }
+  :is(.projs--featured, .projs--more) .proj__tags > span { height: 22px; padding-inline: 9px; font-size: 11px; }
+  :is(.projs--featured, .projs--more) .proj__tags > .tag-nda { padding-inline: 7px 9px; }
   @media (max-width: 900px) {
     .work__bar { max-width: none; }
     .projs.projs--featured { grid-auto-columns: 62%; gap: 16px; max-width: none; margin-inline: -6px; }
@@ -412,6 +421,22 @@
     .projs.projs--featured { grid-auto-columns: 69%; }
     .projs.projs--more { grid-template-columns: repeat(2, 69%); }
     .slide-btns { visibility: hidden; }   /* phones swipe the row; the floating bar would cover the buttons here */
+  }
+  /* ---------- Featured projects as a block: L&T across the top, Neo and the dementia app side by side below ---------- */
+  .projs.projs--featured { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-columns: auto; gap: 20px; max-width: min(940px, 72vw); margin-block: 0; padding: 0; overflow: visible; scroll-snap-type: none; -webkit-mask-image: none; mask-image: none; }
+  .projs.projs--featured > li:first-child { grid-column: 1 / -1; }
+  .projs.projs--more { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }   /* lines up with Neo and the dementia app */
+  @media (min-width: 901px) {
+    .projs.projs--featured > li:first-child .proj { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: stretch; }
+    .projs.projs--featured > li:first-child .proj__head { grid-column: 1; grid-row: 1; padding: 32px 8px 32px 32px; }
+    .projs.projs--featured > li:first-child .proj__arrow { top: 28px; right: auto; left: calc(100% + 8px); }
+    .projs.projs--featured > li:first-child .proj__title { padding-right: 0; }
+    .projs.projs--featured > li:first-child .proj__desc { -webkit-line-clamp: 5; }
+    .projs.projs--featured > li:first-child .proj__media { grid-column: 2; grid-row: 1; align-self: end; margin-top: 0; }
+  }
+  @media (max-width: 900px) {
+    .projs.projs--featured { grid-template-columns: minmax(0, 1fr); max-width: none; margin-inline: 0; }
+    .projs.projs--more { grid-template-columns: minmax(0, 1fr); overflow: visible; margin-inline: 0; padding: 0; }
   }
   /* ---------- Other selected projects as a list: small cover on the left; tags, title and two lines on the right; a rule between ---------- */
   .projs.projs--more { grid-template-columns: minmax(0, 1fr); gap: 0; overflow: visible; margin-inline: auto; padding: 0; border-top: 1px solid var(--line); }
@@ -435,6 +460,10 @@
     .projs.projs--more .proj__title { padding-right: 28px; font-size: var(--fs-md); line-height: 22px; }
     .projs.projs--more .proj__desc { margin-top: 6px; }
     .projs.projs--more .proj__tags { margin-bottom: 6px; padding-right: 28px; }
+  }
+  /* ---------- the whole projects block at 90% of the column, so the featured cards are 10% smaller ---------- */
+  @media (min-width: 901px) {
+    .work__bar, .work__title.work__title--more, .projs.projs--featured, .projs.projs--more { max-width: calc(min(940px, 72vw) * .9); }
   }
   @media (max-width: 760px) {
     :root { --gutter: 20px; }
@@ -545,17 +574,13 @@
 
   <main>
 
-    <!-- ===== Work: three featured projects as wide cards, then two other selected projects, two in a row ===== -->
+    <!-- ===== Work: featured projects as a block (L&T across the top, Neo and dementia below), then two other selected projects ===== -->
     <section class="work" id="work" aria-labelledby="work-title">
       <div class="wide">
         <div class="feat-track">
         <div class="feat-pin">
         <div class="work__bar">
           <h2 class="work__title" id="work-title">Featured projects</h2>
-          <div class="slide-btns" hidden>
-            <button class="slide-btn" type="button" data-dir="-1" aria-controls="projects" aria-label="Previous project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
-            <button class="slide-btn" type="button" data-dir="1" aria-controls="projects" aria-label="Next project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-          </div>
         </div>
         <!-- Each project opens its summary sheet, or, once its case study is live, links to it (budgeting links to Notion, care to the Figma deck).
              To link another one:
@@ -766,7 +791,10 @@
 <dialog class="sheet sheet--wide" id="sheet-resume" aria-labelledby="sheet-resume-title">
   <div class="sheet__bar">
     <p class="sheet__kind" id="sheet-resume-title">Resume</p>
-    <button class="sheet__close" type="button" data-close aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
+    <div class="sheet__acts">
+      <a class="sheet__dl" href="Harsh-Dhokte-Resume.pdf" download="Harsh-Dhokte-Resume.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></svg>Download PDF</a>
+      <button class="sheet__close" type="button" data-close aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
+    </div>
   </div>
   <div class="sheet__scroll" tabindex="0">
     <img class="sheet__resume" src="images/resume.png" width="1190" height="1684" loading="lazy" alt="Resume of Harsh Dhokte, UI/UX Designer, Pune">
@@ -1320,57 +1348,6 @@ const MON = {"pal":{"k":"#3c4245","b":"#607d99","d":"#4f6879","c":"#f9e4b9","C":
       new IntersectionObserver(([seen]) => { visible = seen.isIntersecting; wake(); }).observe(box);                              /* animate only while on screen */
     }
     else { visible = true; load(); }
-  })();
-</script>
-<script>
-  /* featured projects. Wide screens: the row is pinned and the page's own scroll slides it, so scrolling down shows
-     every card first and then moves on. Narrow screens: the row is swiped. The buttons work in both. */
-  (() => {
-    const rail = document.getElementById('projects'), box = document.querySelector('.slide-btns');
-    const track = document.querySelector('.feat-track'), pin = document.querySelector('.feat-pin');
-    if (!rail || !box || !track || !pin) return;
-    const btns = box.querySelectorAll('.slide-btn');
-    const wide = matchMedia('(min-width: 901px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
-    const PACE = 1.6;   /* page pixels per pixel of sideways travel */
-    let pinned = false, start = 0, dist = 0, max = 0, frame = 0;
-    const step = () => { const li = rail.children; return li.length > 1 ? li[1].offsetLeft - li[0].offsetLeft : rail.clientWidth; };
-    const marks = () => {
-      const m = rail.scrollWidth - rail.clientWidth;
-      box.hidden = m < 4;
-      btns[0].disabled = rail.scrollLeft < 4;
-      btns[1].disabled = rail.scrollLeft > m - 4;
-      rail.classList.toggle('is-start', btns[0].disabled);
-      rail.classList.toggle('is-end', btns[1].disabled);
-    };
-    const follow = () => {
-      frame = 0;
-      if (pinned) rail.scrollLeft = Math.min(1, Math.max(0, (scrollY - start) / dist)) * max;
-      marks();
-    };
-    const layout = () => {
-      track.style.height = ''; pin.classList.remove('is-pinned'); pin.style.top = '';
-      max = rail.scrollWidth - rail.clientWidth;
-      pinned = wide.matches && max > 4;
-      if (pinned) {
-        const top = Math.max(88, (innerHeight - pin.offsetHeight) / 2);
-        dist = max * PACE;
-        pin.classList.add('is-pinned'); pin.style.top = top + 'px';
-        track.style.height = (pin.offsetHeight + dist) + 'px';
-        start = track.getBoundingClientRect().top + scrollY - top;
-      }
-      follow();
-    };
-    btns.forEach((b) => b.addEventListener('click', () => {
-      const behavior = still.matches ? 'auto' : 'smooth';
-      if (!pinned) { rail.scrollBy({ left: +b.dataset.dir * step(), behavior }); return; }
-      const to = Math.min(max, Math.max(0, rail.scrollLeft + +b.dataset.dir * step()));
-      scrollTo({ top: start + (to / max) * dist, behavior });
-    }));
-    addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(follow); }, { passive: true });
-    rail.addEventListener('scroll', () => { if (!pinned && !frame) frame = requestAnimationFrame(follow); }, { passive: true });
-    addEventListener('resize', layout);
-    addEventListener('load', layout);
-    layout();
   })();
 </script>
 </body>
