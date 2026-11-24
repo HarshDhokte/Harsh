@@ -368,7 +368,74 @@
   @keyframes pl-gone { to { visibility: hidden; } }
 
   /* ---------- Smaller screens ---------- */
+  /* a second heading for the other selected projects, same style as Featured projects */
+  .work__title--more { margin-top: clamp(64px, 7vw, 96px); }
   @media (max-width: 900px) { .projs { grid-template-columns: minmax(0, 1fr); max-width: none; } .work__title { max-width: none; margin-bottom: 24px; } }
+  /* section headings in the accent pink */
+  .work__title { color: var(--pink); font-weight: 600; }
+  .work__bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: min(940px, 72vw); margin: 0 auto 18px; }
+  .work__bar .work__title { max-width: none; margin: 0; }
+  .slide-btns { display: flex; gap: 8px; }
+  .slide-btns[hidden] { display: none; }
+  .slide-btn { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--rule); border-radius: 50%; color: var(--ink); transition: background-color .25s, border-color .25s, color .25s, opacity .25s; }
+  .slide-btn svg { width: 16px; height: 16px; }
+  .slide-btn:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .slide-btn:disabled { opacity: .35; cursor: default; }
+
+  /* featured projects: one row; two cards and a peek of the third show at a time.
+     On wide screens the row is pinned while scrolling down slides it sideways, then the page carries on. */
+  .projs.projs--featured { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: calc((100% - 40px) / 2.3 * .8); gap: 20px; max-width: calc(min(940px, 72vw) + 12px); margin-block: -6px; padding: 6px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 6px; scrollbar-width: none; }
+  .projs--featured::-webkit-scrollbar { display: none; }
+  .projs--featured > li { scroll-snap-align: start; }
+  .projs--featured .proj__media, .projs--more .proj__media { aspect-ratio: 7 / 4; }
+  .projs--featured { --fade-l: 0px; --fade-r: 56px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%); }
+  .projs--featured:not(.is-start) { --fade-l: 40px; }
+  .projs--featured.is-end { --fade-r: 0px; }
+  .feat-pin.is-pinned { position: sticky; }
+  .feat-pin.is-pinned .projs--featured { overflow-x: hidden; scroll-snap-type: none; }
+
+  /* other selected projects: the same cards, at the same size as the featured ones (80% of the earlier size) */
+  .projs.projs--more { grid-template-columns: repeat(2, calc((100% - 40px) / 2.3 * .8)); gap: 20px; }
+
+  /* at this smaller size the text runs the full card width (the arrow sits in the corner) and descriptions keep to three lines */
+  :is(.projs--featured, .projs--more) .proj__head { position: relative; display: block; padding: 22px 22px 16px; }
+  :is(.projs--featured, .projs--more) .proj__arrow { position: absolute; top: 18px; right: 18px; }
+  :is(.projs--featured, .projs--more) .proj__title { padding-right: 40px; }
+  :is(.projs--featured, .projs--more) .proj__desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+  :is(.projs--featured, .projs--more) .proj__tags { margin-top: 12px; }
+  @media (max-width: 900px) {
+    .work__bar { max-width: none; }
+    .projs.projs--featured { grid-auto-columns: 62%; gap: 16px; max-width: none; margin-inline: -6px; }
+    .projs.projs--more { grid-template-columns: repeat(2, 62%); gap: 16px; overflow-x: auto; scrollbar-width: none; margin-inline: -6px; padding: 6px; }
+  }
+  @media (max-width: 560px) {
+    .projs.projs--featured { grid-auto-columns: 69%; }
+    .projs.projs--more { grid-template-columns: repeat(2, 69%); }
+    .slide-btns { visibility: hidden; }   /* phones swipe the row; the floating bar would cover the buttons here */
+  }
+  /* ---------- Other selected projects as a list: small cover on the left; tags, title and two lines on the right; a rule between ---------- */
+  .projs.projs--more { grid-template-columns: minmax(0, 1fr); gap: 0; overflow: visible; margin-inline: auto; padding: 0; border-top: 1px solid var(--line); }
+  .projs.projs--more .proj { display: grid; grid-template-columns: clamp(200px, 26%, 240px) minmax(0, 1fr); align-items: center; gap: 28px; padding-block: 28px; border-bottom: 1px solid var(--line); border-radius: 0; background: none !important; box-shadow: none; overflow: visible; }
+  .projs.projs--more .proj__media { grid-column: 1; grid-row: 1; order: 0; margin: 0; aspect-ratio: 7 / 4; border-radius: 12px; background: var(--cover-bg); }
+  .projs.projs--more .proj__media::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--media-edge); pointer-events: none; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]):not([data-mode="light"]) .projs.projs--more .proj__media { background: var(--cover-bg-dark); } }
+  :root[data-theme="dark"]:not([data-mode="light"]) .projs.projs--more .proj__media, :root[data-mode="dark"] .projs.projs--more .proj__media { background: var(--cover-bg-dark); }
+  .projs.projs--more .proj__head { grid-column: 2; grid-row: 1; position: relative; display: block; padding: 0; }
+  .projs.projs--more .proj__text { display: flex; flex-direction: column; }
+  .projs.projs--more .proj__tags { order: -1; gap: 0; margin: 0 0 10px; padding-right: 40px; }
+  .projs.projs--more .proj__tags > span { height: auto; padding: 0; background: none; color: var(--muted); font-weight: 400; }
+  .projs.projs--more .proj__tags > span + span::before { content: "\2022"; margin-inline: 8px; color: var(--rule); }
+  .projs.projs--more .proj__title { padding-right: 40px; font-size: var(--fs-lg); line-height: 28px; transition: color .25s; }
+  .projs.projs--more .proj__desc { margin-top: 10px; max-width: 560px; -webkit-line-clamp: 2; }
+  .projs.projs--more .proj__arrow { top: 0; right: 0; width: 28px; height: 28px; border: 0; }
+  @media (hover: hover) { .projs.projs--more .proj:hover .proj__arrow { background: none; color: var(--ink); } .projs.projs--more .proj:hover .proj__title { color: var(--pink); } }
+  @media (max-width: 560px) {
+    .projs.projs--more .proj { grid-template-columns: 112px minmax(0, 1fr); align-items: start; gap: 16px; padding-block: 22px; }
+    .projs.projs--more .proj__media { border-radius: 10px; }
+    .projs.projs--more .proj__title { padding-right: 28px; font-size: var(--fs-md); line-height: 22px; }
+    .projs.projs--more .proj__desc { margin-top: 6px; }
+    .projs.projs--more .proj__tags { margin-bottom: 6px; padding-right: 28px; }
+  }
   @media (max-width: 760px) {
     :root { --gutter: 20px; }
     .col { border-inline: 0; }
@@ -400,6 +467,10 @@
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
 </style>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 </head>
 <body>
 <!-- ===== Preloader: a brush "h" fills while the page loads, then the sheet lifts (delete this block to remove it) ===== -->
@@ -474,20 +545,28 @@
 
   <main>
 
-    <!-- ===== Work: four projects, two in a row, across the page ===== -->
+    <!-- ===== Work: three featured projects as wide cards, then two other selected projects, two in a row ===== -->
     <section class="work" id="work" aria-labelledby="work-title">
       <div class="wide">
-        <h2 class="work__title" id="work-title">Featured projects</h2>
+        <div class="feat-track">
+        <div class="feat-pin">
+        <div class="work__bar">
+          <h2 class="work__title" id="work-title">Featured projects</h2>
+          <div class="slide-btns" hidden>
+            <button class="slide-btn" type="button" data-dir="-1" aria-controls="projects" aria-label="Previous project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+            <button class="slide-btn" type="button" data-dir="1" aria-controls="projects" aria-label="Next project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
         <!-- Each project opens its summary sheet, or, once its case study is live, links to it (budgeting links to Notion, care to the Figma deck).
              To link another one:
              <a class="proj" href="https://your-case-study" target="_blank" rel="noopener"> … </a>
              The benefits, budgeting and care cards show real covers: images/cover-*.webp are the phone and hand cut out of the
              cover photo (transparent, 7:4 window), and --cover-bg on the card repeats the photo's backdrop gradient.
-             Order: L&T benefits, CareOS dementia app, UPI budgeting, ShelfFlow. Benefits, CareOS and ShelfFlow link to their own case study pages (same tab, so the Back button there returns here).
+             Featured: L&T benefits, Neo, CareOS dementia app. Other selected: ShelfFlow, UPI budgeting. Benefits, Neo, CareOS and ShelfFlow link to their own case study pages (same tab, so the Back button there returns here).
              To park a future project as "Coming soon" again, use a card with class "proj proj--soon proj--cover" and the handwritten note image (images/coming-soon-note.png). Swap each src for a real screenshot: a web capture for the laptops
              (the top of it shows), and a phone screenshot (for example 1179 × 2556) for the phones.
              --glow on each panel is the colour of its corner glow, as R G B. -->
-        <ul class="projs" id="projects">
+        <ul class="projs projs--featured" id="projects">
           <li>
             <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #fcf8fb 0%, #fcf7fa 30%, #fdf3f8 55%, #feedf5 75%, #ffe9f4 90%, #ffe5f2 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2c2739 65%, #432e48 80%, #583356 92%, #5f3559 100%)" href="benefits-portal-case-study/index.html">
               <span class="proj__head">
@@ -500,6 +579,20 @@
                 <span class="proj__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
               </span>
               <span class="proj__media"><img class="proj__cover" src="images/cover-benefits.webp" width="1400" height="800" alt="" loading="lazy"></span>
+            </a>
+          </li>
+          <li>
+            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #f5f5f5 0%, #f8f5f3 30%, #fcf6f2 50%, #fef5ea 66%, #fef1dd 80%, #fde6c6 92%, #fbdcb4 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2e2b35 65%, #47383a 80%, #5e4536 92%, #66493a 100%)" href="Neo/index.html">
+              <span class="proj__head">
+                <span class="proj__text">
+                  <span class="proj__title">Neo Agentic AI Shopping Assistant</span>
+                  <span class="proj__desc">Reimagining the future of shopping through agentic AI, exploring how intelligent agents can understand, decide and act on behalf of users through a human-centred interface.</span>
+                  <span class="sr-only">Opens the Neo case study.</span>
+                  <span class="proj__tags"><span>Human–AI Interaction</span><span>Product Design</span><span>Academic Project</span></span>
+                </span>
+                <span class="proj__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              </span>
+              <span class="proj__media"><img class="proj__cover" src="images/cover-neo.webp" width="1400" height="800" alt="Neo on an iPhone held in a hand" loading="lazy"></span>
             </a>
           </li>
           <li>
@@ -516,20 +609,12 @@
               <span class="proj__media"><img class="proj__cover" src="images/cover-care.webp" width="1400" height="800" alt="" loading="lazy"></span>
             </a>
           </li>
-          <li>
-            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #f5f5f5 0%, #f6f6f5 10%, #f9f7f5 25%, #fbf8f5 40%, #fdfaf5 55%, #fefbf6 70%, #fff8ee 80%, #fff1dd 90%, #ffedd5 95%, #ffeacd 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2e2b35 65%, #47383a 80%, #5e4536 92%, #66493a 100%)" href="https://app.notion.com/p/UPI-Companion-App-Case-Study-2f2163fb54d18153be46f54f4cdfe8c9" target="_blank" rel="noopener">
-              <span class="proj__head">
-                <span class="proj__text">
-                  <span class="proj__title">Budgeting companion for UPI users</span>
-                  <span class="proj__desc">The app sorts UPI spending into categories and tracks savings goals.</span>
-                  <span class="sr-only">Opens the case study on Notion in a new tab.</span>
-                  <span class="proj__tags"><span>Academic Project</span><span>Fintech</span></span>
-                </span>
-                <span class="proj__arrow proj__arrow--out" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8.5 7H17v8.5"/></svg></span>
-              </span>
-              <span class="proj__media"><img class="proj__cover" src="images/cover-budgeting.webp" width="1400" height="800" alt="" loading="lazy"></span>
-            </a>
-          </li>
+        </ul>
+        </div>
+        </div>
+
+        <h2 class="work__title work__title--more" id="more-title">Other selected projects</h2>
+        <ul class="projs projs--more" aria-labelledby="more-title">
           <li>
             <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #faf8ff 0%, #f8f5ff 30%, #f3effe 55%, #ede7fd 75%, #e8e1fc 90%, #e5ddfb 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #272840 65%, #302d52 80%, #3a3264 92%, #3e346b 100%)" href="ShelfFlow/index.html">
               <span class="proj__head">
@@ -542,6 +627,20 @@
                 <span class="proj__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
               </span>
               <span class="proj__media"><img class="proj__cover" src="images/cover-shelfflow.webp" width="1400" height="800" alt="ShelfFlow manager dashboard on a laptop" loading="lazy"></span>
+            </a>
+          </li>
+          <li>
+            <a class="proj proj--cover" style="--cover-bg: linear-gradient(180deg, #f5f5f5 0%, #f6f6f5 10%, #f9f7f5 25%, #fbf8f5 40%, #fdfaf5 55%, #fefbf6 70%, #fff8ee 80%, #fff1dd 90%, #ffedd5 95%, #ffeacd 100%); --cover-bg-dark: linear-gradient(180deg, #222636 0%, #222636 50%, #2e2b35 65%, #47383a 80%, #5e4536 92%, #66493a 100%)" href="https://app.notion.com/p/UPI-Companion-App-Case-Study-2f2163fb54d18153be46f54f4cdfe8c9" target="_blank" rel="noopener">
+              <span class="proj__head">
+                <span class="proj__text">
+                  <span class="proj__title">Budgeting companion for UPI users</span>
+                  <span class="proj__desc">The app sorts UPI spending into categories and tracks savings goals.</span>
+                  <span class="sr-only">Opens the case study on Notion in a new tab.</span>
+                  <span class="proj__tags"><span>Academic Project</span><span>Fintech</span></span>
+                </span>
+                <span class="proj__arrow proj__arrow--out" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8.5 7H17v8.5"/></svg></span>
+              </span>
+              <span class="proj__media"><img class="proj__cover" src="images/cover-budgeting.webp" width="1400" height="800" alt="" loading="lazy"></span>
             </a>
           </li>
         </ul>
@@ -1221,6 +1320,57 @@ const MON = {"pal":{"k":"#3c4245","b":"#607d99","d":"#4f6879","c":"#f9e4b9","C":
       new IntersectionObserver(([seen]) => { visible = seen.isIntersecting; wake(); }).observe(box);                              /* animate only while on screen */
     }
     else { visible = true; load(); }
+  })();
+</script>
+<script>
+  /* featured projects. Wide screens: the row is pinned and the page's own scroll slides it, so scrolling down shows
+     every card first and then moves on. Narrow screens: the row is swiped. The buttons work in both. */
+  (() => {
+    const rail = document.getElementById('projects'), box = document.querySelector('.slide-btns');
+    const track = document.querySelector('.feat-track'), pin = document.querySelector('.feat-pin');
+    if (!rail || !box || !track || !pin) return;
+    const btns = box.querySelectorAll('.slide-btn');
+    const wide = matchMedia('(min-width: 901px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
+    const PACE = 1.6;   /* page pixels per pixel of sideways travel */
+    let pinned = false, start = 0, dist = 0, max = 0, frame = 0;
+    const step = () => { const li = rail.children; return li.length > 1 ? li[1].offsetLeft - li[0].offsetLeft : rail.clientWidth; };
+    const marks = () => {
+      const m = rail.scrollWidth - rail.clientWidth;
+      box.hidden = m < 4;
+      btns[0].disabled = rail.scrollLeft < 4;
+      btns[1].disabled = rail.scrollLeft > m - 4;
+      rail.classList.toggle('is-start', btns[0].disabled);
+      rail.classList.toggle('is-end', btns[1].disabled);
+    };
+    const follow = () => {
+      frame = 0;
+      if (pinned) rail.scrollLeft = Math.min(1, Math.max(0, (scrollY - start) / dist)) * max;
+      marks();
+    };
+    const layout = () => {
+      track.style.height = ''; pin.classList.remove('is-pinned'); pin.style.top = '';
+      max = rail.scrollWidth - rail.clientWidth;
+      pinned = wide.matches && max > 4;
+      if (pinned) {
+        const top = Math.max(88, (innerHeight - pin.offsetHeight) / 2);
+        dist = max * PACE;
+        pin.classList.add('is-pinned'); pin.style.top = top + 'px';
+        track.style.height = (pin.offsetHeight + dist) + 'px';
+        start = track.getBoundingClientRect().top + scrollY - top;
+      }
+      follow();
+    };
+    btns.forEach((b) => b.addEventListener('click', () => {
+      const behavior = still.matches ? 'auto' : 'smooth';
+      if (!pinned) { rail.scrollBy({ left: +b.dataset.dir * step(), behavior }); return; }
+      const to = Math.min(max, Math.max(0, rail.scrollLeft + +b.dataset.dir * step()));
+      scrollTo({ top: start + (to / max) * dist, behavior });
+    }));
+    addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(follow); }, { passive: true });
+    rail.addEventListener('scroll', () => { if (!pinned && !frame) frame = requestAnimationFrame(follow); }, { passive: true });
+    addEventListener('resize', layout);
+    addEventListener('load', layout);
+    layout();
   })();
 </script>
 </body>

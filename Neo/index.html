@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neo · A personal commerce agent</title>
+<meta name="description" content="A UX case study by Harsh Dhokte on how people could delegate shopping to an AI agent and still understand, trust and control what it does.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+ --bg:#fbfaf8;--panel:#ffffff;--panel2:#f4f2ef;--line:#ece9e4;--rule:#dedad3;--box:#d4cfc7;
+ --ink:#121218;--body:#55576a;--muted:#8b8d9b;
+ --o1:#f07a2c;--o2:#fe3aa6;--o3:#b531fc;
+ --warm:linear-gradient(110deg,#ffb36b 0%,#ff8a3d 30%,#fe3aa6 70%,#b531fc 100%);
+ --disp:'Sora',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif;
+ --col:1380px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg);color-scheme:light}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);font-weight:300;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video,iframe{display:block;max-width:100%}
+h1,h2,h3,h4,p,ul,figure{margin:0}ul{padding:0;list-style:none}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--o1);outline-offset:3px;border-radius:4px}
+b,strong{font-weight:500;color:var(--ink)}
+.g{background:linear-gradient(110deg,#e2621a 0%,#e8407a 60%,#a42ad8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* the vertical grid behind everything */
+.grid-bg{position:fixed;inset:0;pointer-events:none;z-index:0;display:flex;justify-content:center}
+.grid-bg div{width:min(100%,var(--col));display:grid;grid-template-columns:repeat(4,1fr);padding:0 40px}
+.grid-bg i{border-left:1px solid var(--line)}.grid-bg i:last-child{border-right:1px solid var(--line)}
+main,header,footer{position:relative;z-index:1}
+.wrap{max-width:var(--col);margin:0 auto;padding:0 40px}
+.rule{border-top:1px solid var(--rule)}
+
+/* type */
+.kick{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:400}
+h1{font-weight:400;font-size:clamp(44px,6.4vw,92px);line-height:1;letter-spacing:-.035em}
+h2{font-weight:400;font-size:clamp(32px,4vw,56px);line-height:1.08;letter-spacing:-.03em}
+h3{font-weight:400;font-size:clamp(24px,2.6vw,34px);line-height:1.18;letter-spacing:-.02em}
+h4{font-weight:500;font-size:19px;line-height:1.3}
+.lead{font-size:clamp(20px,2.1vw,30px);line-height:1.3;letter-spacing:-.015em;font-weight:400}
+.body{color:var(--body);font-size:17px}
+.small{font-size:14px;color:var(--muted)}
+p+p{margin-top:14px}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.no-js .reveal{opacity:1;transform:none}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:40;background:rgba(251,250,248,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);transform:translateY(-100%);transition:transform .35s}
+.nav.show{transform:none}
+.nav .wrap{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;padding-block:10px}
+.nav .brand{font-weight:500;margin-right:18px;flex:none}
+.nav a.l{flex:none;font-size:13px;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:999px;transition:color .2s,background .2s}
+.nav a.l:hover{color:var(--ink)}
+.nav a.l.on{color:#fff;background:#121218}
+.bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--warm);z-index:41}
+
+/* hero */
+.hero{padding:120px 0 0}
+.hero .top{display:grid;grid-template-columns:1fr 1.45fr;gap:60px;align-items:start;padding-bottom:90px}
+.hero .intro p{font-size:20px;line-height:1.35;color:var(--ink)}
+.hero .intro p.b{margin-top:22px;font-weight:500}
+.hero .claim{font-size:clamp(26px,2.9vw,40px);line-height:1.2;letter-spacing:-.02em;font-weight:400}
+.meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;padding:34px 0 60px}
+.meta dt{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meta dd{margin:10px 0 0;font-size:20px}
+.title-band{padding:110px 0 110px;position:relative;overflow:hidden}
+.title-band h1 span{display:block}
+.title-band .glow{position:absolute;right:-10%;top:-30%;width:70%;aspect-ratio:1;background:radial-gradient(closest-side,rgba(255,138,61,.3),rgba(254,58,166,.14) 50%,transparent 75%);pointer-events:none}
+
+/* sections */
+.sec{padding:150px 0 0;scroll-margin-top:60px}
+.sec-head{display:grid;grid-template-columns:1fr 1.45fr;gap:60px;align-items:end;margin-bottom:56px}
+.sec-head .lab{display:flex;flex-direction:column;gap:18px}
+.center{text-align:center}
+.spark{width:72px;height:72px;margin:0 auto 18px}
+
+/* storyboard */
+.story{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.panel{border:1px solid var(--box);border-radius:10px;overflow:hidden;background:var(--panel);display:flex;flex-direction:column}
+.panel img{width:100%;aspect-ratio:2.2/1;object-fit:cover}
+.panel .in{padding:22px 22px 26px}
+.panel .n{font-size:13px;color:var(--muted)}
+.panel h4{margin-top:10px}
+.panel p{margin-top:8px;font-size:15px;color:var(--body);line-height:1.5}
+.panel.next{border-color:rgba(230,110,40,.55);box-shadow:0 24px 50px -30px rgba(230,110,40,.45)}
+.punch{padding:120px 0 0;text-align:center}
+.punch .q{font-size:clamp(22px,2.4vw,32px);color:var(--muted)}
+.punch .a{margin-top:16px;font-size:clamp(32px,4.8vw,68px);line-height:1.08;letter-spacing:-.03em}
+
+/* comparison rows */
+.evo{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.evo .r{display:grid;grid-template-columns:260px 1fr;gap:24px;padding:26px 28px;background:var(--bg);align-items:center}
+.evo .r .k{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.evo .steps{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:16px}
+.evo .steps span{padding:8px 16px;border:1px solid var(--box);border-radius:999px}
+.evo .steps i{font-style:normal;color:var(--muted)}
+.evo .r.ag{background:linear-gradient(90deg,rgba(255,138,61,.12),rgba(254,58,166,.06) 60%,transparent)}
+.evo .r.ag .k{color:#d9601a}
+.evo .r.ag .steps span.h{border:0;background:var(--warm);color:#fff}
+.quote-def{margin-top:28px;display:grid;grid-template-columns:1fr 1.45fr;gap:60px}
+.quote-def p.d{font-size:19px;line-height:1.5;color:var(--body);border-left:2px solid var(--o1);padding-left:22px}
+
+/* fan cards */
+.fan{position:relative;padding-bottom:220px}
+.fan .cards{position:relative;z-index:2}
+.fan::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(1100px,96%);height:420px;z-index:1;pointer-events:none;
+ background:radial-gradient(60% 100% at 50% 100%,rgba(255,138,61,.6),rgba(254,58,166,.3) 35%,rgba(181,49,252,.12) 60%,transparent 75%);
+ -webkit-mask:linear-gradient(to top,#000,transparent);mask:linear-gradient(to top,#000,transparent);filter:blur(8px)}
+.cards{display:grid;gap:18px}
+.c5{grid-template-columns:repeat(5,minmax(0,1fr))}.c4{grid-template-columns:repeat(4,minmax(0,1fr))}.c3{grid-template-columns:repeat(3,minmax(0,1fr))}.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dcard{position:relative;border:1px solid var(--box);border-radius:10px;padding:26px 22px 26px;min-height:300px;display:flex;flex-direction:column;background:radial-gradient(120% 70% at 80% 0%,rgba(255,138,61,.10),transparent 60%),var(--panel);transition:transform .3s,border-color .3s}
+.dcard:hover{transform:translateY(-4px);border-color:#f0b48d;box-shadow:0 24px 40px -28px rgba(200,90,30,.4)}
+.dcard .ic{width:52px;height:52px;stroke:#121218;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.dcard .no{position:absolute;right:22px;top:24px;font-size:15px;color:var(--muted)}
+.dcard .txt{margin-top:auto}
+.dcard h4{font-size:18px}
+.dcard p{margin-top:10px;font-size:15px;color:var(--body);line-height:1.5}
+.dcard .src{margin-top:12px;font-size:12.5px;color:var(--muted)}
+
+/* dark statement block */
+.statement{border:1px solid var(--box);border-radius:12px;padding:56px 52px;position:relative;overflow:hidden;background:radial-gradient(70% 120% at 100% 0%,rgba(255,138,61,.16),rgba(254,58,166,.07) 40%,transparent 70%),var(--panel)}
+.statement .kick{color:#d9601a}
+.statement h3{margin-top:18px;max-width:28ch}
+.statement p.body{margin-top:18px;max-width:64ch}
+.statement .big{margin-top:30px;font-size:clamp(24px,2.8vw,38px);line-height:1.22;letter-spacing:-.02em;max-width:30ch}
+.statement .next{margin-top:36px;display:inline-flex;gap:12px;align-items:center;font-size:18px}
+.statement .next::before{content:"↓";display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--box)}
+
+.proto-card{border:1px solid var(--box);border-radius:12px;overflow:hidden;background:var(--panel)}
+.proto-card img{width:100%;aspect-ratio:1.78/1;object-fit:cover}
+.proto-card figcaption{padding:24px 26px 28px}
+.proto-card .body{margin-top:10px}
+.proto-card .enables{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:15px;color:var(--ink)}
+.stat-big{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:56px 0 48px;display:grid;grid-template-columns:auto 1fr;gap:12px 48px;align-items:end}
+.stat-big .n{font-size:clamp(80px,13vw,200px);line-height:.9;letter-spacing:-.05em;font-weight:400}
+.stat-big .l{font-size:clamp(20px,2.2vw,30px);line-height:1.25;max-width:16em;padding-bottom:14px}
+.stat-big .small{grid-column:1/-1}
+.qs{margin-top:28px;display:grid;gap:0;border-top:1px solid var(--rule)}
+.qs p{margin:0;padding:18px 0;border-bottom:1px solid var(--rule);font-size:clamp(18px,1.8vw,22px);line-height:1.4;color:var(--ink)}
+@media (max-width:900px){.stat-big{grid-template-columns:1fr}}
+.shift{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);border:1px solid var(--box);border-radius:12px;overflow:hidden;background:var(--panel)}
+.shift__txt{padding:48px 44px 44px;display:flex;flex-direction:column}
+.shift__lead{margin-top:18px;font-size:clamp(20px,2vw,26px);line-height:1.35;letter-spacing:-.015em;font-weight:400}
+.shift__q{margin-top:22px;padding-left:18px;border-left:2px solid var(--o1);font-size:18px;line-height:1.45;color:var(--body)}
+.shift__tags{margin-top:auto;padding-top:30px;display:flex;flex-wrap:wrap;gap:8px}
+.shift__tags li{font-size:13px;padding:6px 12px;border:1px solid var(--box);border-radius:999px;color:var(--body)}
+.shift__img{margin:0;background:linear-gradient(180deg,#f7f2ec,#f3ece6);display:flex;align-items:flex-end;justify-content:center;border-left:1px solid var(--line)}
+.shift__img img{width:100%;height:auto}
+.qcard{position:relative;border:1px solid var(--box);border-radius:10px;padding:26px 24px 30px;background:var(--panel);display:flex;flex-direction:column;min-height:240px;transition:transform .3s,border-color .3s}
+.qcard:hover{transform:translateY(-4px);border-color:#f0b48d}
+.qcard:nth-child(1){background:radial-gradient(120% 70% at 0% 0%,rgba(255,138,61,.08),transparent 60%),var(--panel)}
+.qcard:nth-child(2){background:radial-gradient(120% 70% at 50% 0%,rgba(254,58,166,.06),transparent 60%),var(--panel)}
+.qcard:nth-child(3){background:radial-gradient(120% 70% at 100% 0%,rgba(181,49,252,.06),transparent 60%),var(--panel)}
+.qcard .qn{font-size:15px;color:var(--muted)}
+.qcard .qlab{position:absolute;right:22px;top:24px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#c4561a}
+.qcard p{margin-top:auto;padding-top:40px;font-size:clamp(18px,1.6vw,21px);line-height:1.38;color:var(--ink);letter-spacing:-.01em}
+.central{margin-top:28px;border-radius:12px;padding:64px 56px 68px;background:radial-gradient(70% 140% at 100% 0%,rgba(255,138,61,.22),rgba(254,58,166,.1) 45%,transparent 75%),linear-gradient(180deg,#ffffff,#f7f4f0);border:1px solid var(--box)}
+.central .kick{color:#d9601a}
+.central__s{margin-top:20px;font-size:clamp(28px,3.6vw,48px);line-height:1.15;letter-spacing:-.03em;max-width:26ch}
+.handoff{margin-top:72px;display:grid;grid-template-columns:1fr 1.45fr;gap:60px;align-items:start}
+.handoff__a{font-size:clamp(20px,2vw,26px);line-height:1.3;letter-spacing:-.015em;display:flex;gap:14px;align-items:baseline}
+.handoff__a::before{content:"↓";flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--box);font-size:16px}
+@media (max-width:900px){.shift{grid-template-columns:1fr}.shift__img{border-left:0;border-top:1px solid var(--line)}.shift__txt{padding:32px 26px}.central{padding:40px 28px}.handoff{grid-template-columns:1fr;gap:16px}}
+@media (max-width:600px){.qcard{min-height:0}.qcard p{padding-top:28px}}
+/* research */
+.method{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.method div{padding:30px 24px 34px 0}
+.method b{display:block;font-size:clamp(40px,4.4vw,64px);font-weight:400;letter-spacing:-.04em;line-height:1}
+.method span{display:block;margin-top:12px;font-size:15px;color:var(--body)}
+.gapbox{margin-top:28px;border-radius:12px;padding:34px 36px;background:var(--warm);color:#fff}
+.gapbox .kick{color:rgba(255,255,255,.85)}
+.gapbox p.l{margin-top:12px;font-size:clamp(20px,2.2vw,28px);line-height:1.3;letter-spacing:-.015em}
+.split{display:grid;grid-template-columns:1fr 1.45fr;gap:60px;align-items:start}
+.light{border-radius:10px;overflow:hidden;background:#fff;padding:14px;border:1px solid var(--box)}
+.light figcaption{margin-top:10px;font-size:13.5px;color:#4a5164;font-family:var(--sans)}
+.light figcaption b{color:#0e1220}
+.qt{margin-top:16px;border-left:2px solid var(--o1);padding-left:16px;font-size:16px;color:var(--ink);font-style:italic}
+.themes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--rule)}
+.themes div{padding:30px 24px 10px 0}
+.themes .n{font-size:14px;color:var(--muted)}
+.themes h4{margin-top:40px;font-size:18px}
+.themes p{margin-top:10px;font-size:15px;color:var(--body)}
+.persona{border:1px solid var(--box);border-radius:10px;overflow:hidden;background:var(--panel);display:flex;flex-direction:column}
+.persona img{width:100%;aspect-ratio:4/3.3;object-fit:cover;object-position:50% 18%}
+.persona .in{padding:22px}
+.persona .r{font-size:14px;color:var(--muted);margin-top:4px}
+.persona p{margin-top:12px;font-size:15px;color:var(--body)}
+.persona q{display:block;margin-top:12px;font-size:15px;font-style:italic;quotes:none;color:var(--ink)}
+
+/* approach columns */
+.approach{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.approach div{padding:40px 30px 46px 0}
+.approach .n{font-size:14px;color:var(--muted)}
+.approach p{margin-top:16px;font-size:21px;line-height:1.3;color:var(--ink)}
+.approach p span{display:block;margin-top:10px;font-size:15px;line-height:1.5;color:var(--body)}
+.hmw{margin-top:40px;font-size:clamp(24px,2.8vw,40px);line-height:1.22;letter-spacing:-.02em}
+.prob{font-size:20px;line-height:1.5;color:var(--body)}
+.prob mark{background:none;color:var(--ink)}
+
+/* visualize the agent */
+.viz{display:grid;grid-template-columns:260px 340px 1fr;gap:48px;align-items:start}
+.pills{display:grid;gap:14px}
+.pills span{display:block;padding:16px 20px;border:1px solid var(--box);border-radius:8px;font-size:18px;background:#fff}
+.pills span.on{border-color:rgba(230,110,40,.6)}
+.dphone{border-radius:34px;background:#f0ede8;border:1px solid var(--box);padding:16px 16px 18px;position:relative}
+.dphone::before{content:"";display:block;width:16px;height:16px;border:2px solid #55576a;border-radius:50%;margin:2px auto 14px}
+.dphone::after{content:"";position:absolute;right:-6px;top:22%;width:6px;height:70px;border-radius:0 4px 4px 0;background:#e3dfd8}
+.zone{border:1.5px dashed rgba(230,110,40,.75);border-radius:12px;display:grid;place-items:center;text-align:center;padding:18px;color:#55576a;background:#fff;font-size:15px;line-height:1.4}
+.zone b{display:block;font-size:30px;font-weight:300;margin-bottom:8px;color:#121218}
+.zone+.zone{margin-top:12px}
+.z25{min-height:150px}.z50{min-height:280px}
+.comps{display:grid;gap:22px}
+.comp{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,.85fr);align-items:center}
+.comp .box{border:1.5px dashed rgba(230,110,40,.6);border-radius:12px;padding:12px;background:#fff}
+.comp .box img{border-radius:10px;width:100%}
+.comp .ln{height:1px;background:var(--box)}
+.comp p{font-size:17px;line-height:1.35}
+.comp p span{display:block;margin-top:6px;font-size:14.5px;color:var(--body)}
+
+/* chapters */
+.chapter{margin-top:150px;scroll-margin-top:60px}
+.ch-card{position:relative;border:1px solid var(--box);border-radius:12px;padding:44px 52px 54px;min-height:420px;display:flex;flex-direction:column;overflow:hidden;
+ background:radial-gradient(60% 90% at 90% 0%,rgba(255,138,61,.22),rgba(254,58,166,.1) 40%,transparent 70%),linear-gradient(180deg,#ffffff,#f7f4f0)}
+.ch-card .c{font-size:20px;color:var(--body)}
+.ch-card .ic{position:absolute;right:46px;top:40px;width:56px;height:56px;stroke:#55576a;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.ch-card h3{margin-top:auto;font-size:clamp(30px,3.6vw,50px);line-height:1.08;max-width:18ch}
+.ch-card p{margin-top:20px;font-size:18px;color:var(--body);max-width:62ch;line-height:1.5}
+.rows{margin-top:80px;display:grid;gap:110px}
+.row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;align-items:center}
+.ph{width:min(100%,270px);justify-self:center;aspect-ratio:600/1268;border-radius:13%/6.2%;overflow:hidden;background:#000;position:relative;
+ box-shadow:0 0 0 1px #d4cfc7,0 34px 60px -30px rgba(230,110,40,.55),0 10px 40px -24px rgba(254,58,166,.3)}
+.ph img,.ph video{width:100%;height:100%;object-fit:cover}
+.ph .live{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;letter-spacing:.08em;display:flex;gap:6px;align-items:center;font-family:var(--sans)}
+.ph .live i{width:6px;height:6px;border-radius:50%;background:#ff5a5a;animation:pl 1.4s infinite}
+@keyframes pl{50%{opacity:.25}}
+.note{position:relative;border:1px solid var(--box);border-radius:6px;padding:28px 28px 30px;background:#fff;margin:0 18px}
+.note h4{font-size:21px;font-weight:500;line-height:1.25}
+.note p{margin-top:14px;font-size:16.5px;line-height:1.45;color:var(--body)}
+.note.l::before,.note.r::after{content:"";position:absolute;top:50%;width:42px;height:1px;background:var(--box)}
+.note.l::before{right:100%}.note.r::after{left:100%}
+.note .who{display:inline-block;margin-top:14px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;border:1px solid rgba(230,110,40,.55);color:#c4561a;background:#fff4ec}
+.row .span2{grid-column:span 2}
+.row .c2{grid-column:2}.row .c3{grid-column:3}.row .c4{grid-column:4}
+
+/* explorations */
+.ximg{border-radius:10px;overflow:hidden;background:#fff}
+.ways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.ways div{border:1px solid var(--box);border-radius:10px;padding:30px;background:var(--panel)}
+.ways div.pick{border-color:rgba(230,110,40,.6);background:radial-gradient(90% 90% at 100% 0%,rgba(255,138,61,.14),transparent 60%),var(--panel)}
+.ways .t{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ways .pick .t{color:#d9601a}
+.ways h4{margin-top:14px;font-size:22px;font-weight:400}
+.ways p{margin-top:10px;color:var(--body);font-size:16px}
+
+/* memory */
+.kinds{margin-top:18px;display:grid;gap:10px}
+.kinds div{display:flex;gap:12px;align-items:baseline;font-size:15.5px;color:var(--body)}
+.kinds i{flex:none;width:9px;height:9px;border-radius:50%}
+
+/* prototype */
+.proto{margin-top:170px;border-top:1px solid var(--rule);padding-top:120px}
+.pframe{margin-top:50px;border:1px solid var(--box);border-radius:12px;overflow:hidden;background:#0c0e14;position:relative;box-shadow:0 40px 80px -50px rgba(40,30,20,.5)}
+.pframe iframe{width:100%;height:min(1040px,94vh);border:0;background:#0c0e14}
+.pframe .cover{position:absolute;inset:0;display:grid;place-items:center;border:0;width:100%;cursor:pointer;color:#121218;font:inherit;
+ background:radial-gradient(50% 60% at 50% 45%,rgba(255,138,61,.35),rgba(254,58,166,.15) 45%,transparent 70%),#f4f1ec}
+.pframe .cover span{display:inline-flex;gap:12px;align-items:center;padding:16px 28px;border-radius:999px;background:#121218;color:#fff;font-size:17px;font-weight:500}
+.pframe .cover small{display:block;margin-top:14px;color:var(--body);font-size:14px}
+.try{margin-top:22px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.try div{background:#fff;padding:22px}
+.try b{display:block;font-size:16px}
+.try p{margin-top:6px;font-size:14px;color:var(--body)}
+.btn{display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:13px 22px;border-radius:999px;border:1px solid var(--box);text-decoration:none;font-size:15px}
+.btn:hover{border-color:var(--o1)}
+.honest{margin-top:18px;font-size:14.5px;color:var(--muted);max-width:76ch}
+
+/* reflection */
+.refl{padding:170px 0 140px}
+.refl .lead{margin-top:30px;max-width:34em}
+footer{border-top:1px solid var(--rule);padding:40px 0 70px;color:var(--muted);font-size:14px}
+
+.zoom{position:fixed;inset:0;z-index:60;background:rgba(18,18,24,.88);display:none;align-items:center;justify-content:center;padding:28px;cursor:zoom-out}
+.zoom.on{display:flex}.zoom img{max-width:100%;max-height:100%;border-radius:8px}
+[data-zoom]{cursor:zoom-in}
+
+@media (max-width:1100px){
+ .viz{grid-template-columns:1fr 300px}.viz .pills{grid-column:1/-1;grid-template-columns:repeat(5,minmax(0,1fr))}.viz .comps{grid-column:1/-1}.viz .dwrap{grid-row:2}
+ .c5,.themes,.try{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .story{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:900px){
+ .wrap,.grid-bg div{padding:0 22px}
+ .hero .top,.sec-head,.split,.quote-def,.meta{grid-template-columns:1fr;gap:28px}
+ .c4,.c3,.approach,.method{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .evo .r{grid-template-columns:1fr;gap:12px}
+ .row{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 0}
+ .row>*{grid-column:auto!important}
+ .note{margin:0 0 0 14px}.note.l::before,.note.r::after{display:none}
+ .viz{grid-template-columns:1fr}.viz .pills{grid-template-columns:repeat(2,minmax(0,1fr))}.dwrap{max-width:320px;margin:0 auto}
+ .comp{grid-template-columns:1fr;gap:12px}.comp .ln{display:none}
+ .ch-card{padding:30px 26px 34px;min-height:340px}.ch-card .ic{right:24px;top:26px;width:42px;height:42px}
+ .statement{padding:34px 26px}
+}
+@media (max-width:600px){
+ body{font-size:16px}
+ .c5,.c4,.c3,.c2,.themes,.approach,.method,.story,.ways,.try{grid-template-columns:1fr}
+ .row{grid-template-columns:1fr;gap:22px}.note{margin:0}
+ .ph{width:min(78%,280px)}
+ .dcard{min-height:220px}
+ .fan{padding-bottom:140px}
+ .pframe iframe{height:86vh}
+}
+
+/* ===== v10 overrides: CareOS margins, type scaled to the narrower column ===== */
+:root{--col:1040px;--wide:1300px}
+.wrap{max-width:var(--col);padding:0 40px}
+.wide{max-width:var(--wide);margin:0 auto;padding:0 40px}
+.grid-bg div{width:min(100%,var(--col))}
+h1{font-size:clamp(42px,5.6vw,76px)}
+h2{font-size:clamp(28px,3.1vw,42px);line-height:1.12}
+h3{font-size:clamp(22px,2.2vw,28px)}
+h4{font-size:17px}
+.lead{font-size:clamp(18px,1.7vw,22px);line-height:1.4}
+.body{font-size:16px}
+.sec{padding-top:120px}
+.sec-head{grid-template-columns:1fr 1.25fr;gap:44px;margin-bottom:44px}
+.split{grid-template-columns:1fr 1.25fr;gap:44px}
+.title-band{padding:110px 0 70px}
+.meta{padding:28px 0 20px}.meta dd{font-size:16px}
+.punch{padding-top:96px}.punch .q{font-size:17px;color:var(--muted)}.punch .a{font-size:clamp(26px,3vw,40px)}
+.story{gap:16px}.panel .in{padding:18px 18px 22px}.panel h4{font-size:16px}.panel p{font-size:14px}
+.dcard{min-height:250px}.dcard h4{font-size:16px}.dcard p{font-size:14.5px}
+.qcard{min-height:200px}.qcard p{font-size:17px}
+.central{padding:48px 44px 52px}.central__s{font-size:clamp(24px,2.8vw,36px)}
+.shift__txt{padding:40px 36px}.shift__lead{font-size:clamp(19px,1.8vw,23px)}.shift__q{font-size:16px}
+.approach p{font-size:18px}.approach p span{font-size:14px}
+.hmw{font-size:clamp(22px,2.4vw,32px)}.prob{font-size:17px}
+.persona .in{padding:18px}
+.kick.a{color:#d9601a}
+
+/* flow diagram (as in Figma) */
+.flows{display:grid;gap:26px}
+.flows .k{font-family:var(--disp);font-weight:500;font-size:15px;color:#2b2b33}
+.chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:12px 6px;align-items:flex-start}
+.chip{display:flex;flex-direction:column;gap:6px}
+.chip span{display:inline-block;padding:8px 20px 8px 12px;font-size:15px;color:#121218;background:linear-gradient(90deg,#fbe29a,rgba(251,226,154,0))}
+.ag .chip span{background:linear-gradient(90deg,#7ea4f6,rgba(126,164,246,.06))}
+.ag .chip:first-child span{background:linear-gradient(90deg,#5b8bf2,rgba(126,164,246,.1))}
+.chip small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#55576a}
+.chips i{font-style:normal;color:#55576a;padding-top:7px;font-size:16px}
+.why{margin-top:34px;display:grid;grid-template-columns:150px 1fr;gap:28px;padding:22px 28px;background:#fff;border-radius:8px;align-items:start}
+.why h4{font-family:var(--disp);font-size:20px;font-weight:500;line-height:1.25}
+.why p{font-size:16px;color:#2b2b33}
+.why a{display:block;margin-top:10px;font-size:13px;color:#3a5fd0;text-align:right}
+
+/* protocols */
+.proto-img{border-radius:10px;overflow:hidden}
+.proto-img img{width:100%;aspect-ratio:1.78/1;object-fit:cover}
+.srcline{margin-top:10px;font-size:13px;color:var(--muted)}
+.pbox{border:1px solid #e2e5ee;border-radius:12px;background:#fff;padding:18px}
+.pbox>p{font-size:15px;font-weight:500;color:#121218}
+.pflow{margin-top:12px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:center}
+.pflow i{font-style:normal;color:#3a5fd0}
+.pst{border:1px solid #d8e2f6;border-radius:8px;background:#f1f5fd;padding:10px 10px 12px;height:100%}
+.pst.on{background:#fff;border:1.5px solid #3a5fd0}
+.pst .t{display:inline-block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#3a5fd0;background:#e1eafc;border-radius:4px;padding:2px 6px}
+.pst b{display:block;margin-top:6px;font-size:14px;font-weight:500}
+.pst span{display:block;margin-top:4px;font-size:12.5px;line-height:1.45;color:var(--body)}
+
+/* desk research: search results, coded */
+.serp{position:relative;height:470px;margin-top:30px}
+.res{position:absolute;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.12),0 8px 18px -10px rgba(0,0,0,.18);padding:9px 12px 10px;font-family:Arial,Helvetica,sans-serif;font-size:10.5px;line-height:1.4;color:#4d5156}
+.res .site{display:flex;align-items:center;gap:7px}
+.res .fav{width:18px;height:18px;border-radius:50%;background:#eef0f3;display:grid;place-items:center;font-size:8px;font-weight:700;color:#3c4043;flex:none}
+.res .site b{display:block;font-weight:400;color:#202124;font-size:11px}
+.res .site small{display:block;font-size:9.5px;color:#4d5156}
+.res a{display:block;margin-top:4px;color:#1a0dab;font-size:13.5px;line-height:1.3;text-decoration:underline}
+.res p{margin-top:3px}
+.res .tag{display:inline-block;font-size:9.5px;background:#e6f4ea;color:#137333;border-radius:3px;padding:1px 5px;margin-bottom:4px}
+.res .ttl{font-size:13px;color:#202124;line-height:1.3}
+
+/* primary research cards */
+.mcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px}
+.mc .hd{font-family:var(--disp);font-size:21px;padding:8px 14px;background:linear-gradient(90deg,#fbe29a,rgba(251,226,154,0))}
+.mc .hd b{font-weight:600;margin-right:10px}
+.mc .mode{margin-top:12px;font-family:var(--disp);font-size:16px;color:#55576a;line-height:1.6}
+.mc .mode a{margin-left:14px;color:#3a5fd0;font-weight:500}
+.mc .mode em{font-style:normal;color:#3a5fd0}
+.mc h4{margin-top:18px;font-family:var(--disp);font-size:18px;font-weight:600}
+.mc .goal{margin-top:6px;font-size:15px;color:#2b2b33;max-width:40ch}
+.mc figure{margin-top:20px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.mc figure img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top}
+
+/* synthesis table (as in Figma) */
+.syn{width:100%;border-collapse:collapse;border:1px solid #8c8e99;border-radius:10px;overflow:hidden;background:#fff;font-size:15px}
+.syn th{background:#dfe4fd;text-align:left;font-family:var(--disp);font-weight:500;font-size:15px;padding:16px 18px;border-left:1px solid #b9bccb}
+.syn td{padding:16px 18px;border-top:1px solid #b9bccb;border-left:1px solid #b9bccb;vertical-align:top;line-height:1.5;color:#121218}
+.syn td:first-child{background:#fdf3ec;font-family:var(--disp);font-weight:500;width:15%}
+.syn em{font-style:normal;color:#d9601a}
+
+/* design decision cards */
+.dd{border:1px solid var(--box);border-radius:10px;padding:24px 26px;background:#fff}
+.dd.ch{border-color:rgba(230,110,40,.45);background:radial-gradient(90% 120% at 100% 0%,rgba(255,138,61,.12),rgba(254,58,166,.05) 45%,transparent 70%),#fff}
+.dd .kick{color:#d9601a}
+.dd p.t{margin-top:12px;font-size:15.5px;color:var(--body)}
+
+/* ideation, coded */
+.ide{margin-top:44px;display:grid;grid-template-columns:240px 230px 1fr;gap:36px;align-items:center}
+.zone{font-size:13.5px;padding:14px}.zone b{font-size:26px}
+.z25{min-height:120px}.z50{min-height:220px}
+.mphone{position:relative;width:230px;aspect-ratio:.48;border-radius:38px;padding:8px;background:linear-gradient(145deg,#c9c7d6,#7c7a8c);box-shadow:0 30px 60px -30px rgba(40,30,60,.5)}
+.mphone .scr{position:relative;width:100%;height:100%;border-radius:31px;overflow:hidden;background:radial-gradient(70% 45% at 100% 70%,rgba(254,58,166,.55),transparent 70%),radial-gradient(60% 40% at 70% 50%,rgba(255,138,61,.45),transparent 70%),linear-gradient(180deg,#f7eef0,#f2e4ea);padding:44px 10px 12px;display:flex;flex-direction:column;gap:8px}
+.mphone .isl{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:76px;height:22px;border-radius:12px;background:#111}
+.mph-b{border-radius:12px;background:rgba(60,56,66,.72);color:#fff;font-size:10px;padding:9px 10px}
+.mph-b small{display:block;opacity:.7;font-size:8.5px}
+.mph-w{margin-top:8px;border-radius:9px;background:rgba(255,255,255,.14);display:grid;place-items:center;height:64px;font-size:9.5px}
+.mph-s{border-radius:999px;background:rgba(60,56,66,.72);color:#fff;font-size:9px;padding:7px 10px;display:flex;justify-content:space-between;align-items:center}
+.mph-s span:last-child{background:#fff;color:#121218;border-radius:999px;padding:2px 8px;font-size:8.5px;font-weight:600}
+.mph-c{margin-top:auto;border-radius:12px;background:rgba(60,56,66,.72);color:#fff;font-size:10px;height:58px;display:grid;place-items:center}
+.mph-i{border-radius:12px;background:rgba(30,28,36,.85);color:rgba(255,255,255,.75);font-size:9.5px;padding:10px 12px}
+.anno{display:grid;gap:26px}
+.anno div{position:relative;padding-left:44px}
+.anno div::before{content:"";position:absolute;left:0;top:11px;width:34px;border-top:1.5px dashed #3a8df0}
+.anno div::after{content:"";position:absolute;left:30px;top:7px;width:9px;height:9px;border-radius:50%;background:#3a8df0}
+.anno h4{font-family:var(--disp);font-size:16.5px;font-weight:500}
+.anno h4 span{color:#e2621a;margin-right:6px}
+.anno p{margin-top:6px;font-size:14px;color:#2b2b33;max-width:44ch}
+.anno .pill{display:inline-flex;gap:6px;align-items:center;margin-bottom:8px;padding:4px 10px;border-radius:999px;background:#111;color:#fff;font-size:9.5px}
+.layer{margin-top:64px;display:grid;grid-template-columns:330px 1fr;gap:44px;align-items:center}
+.lcard{border-radius:24px;padding:34px 30px 30px;color:#fff;background:radial-gradient(70% 55% at 0% 100%,rgba(255,138,61,.75),rgba(254,58,166,.35) 45%,transparent 75%),#0b0b0f}
+.lcard h3{color:#fff;font-size:28px;line-height:1.1}
+.lcard p{margin-top:14px;font-size:14px;color:rgba(255,255,255,.72)}
+.lcard ul{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.lcard li{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(255,255,255,.4);border-radius:999px;font-size:13px}
+.lcard li svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.layer .say{font-family:var(--disp);font-size:clamp(24px,2.8vw,34px);line-height:1.2;letter-spacing:-.025em}
+.tiles{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tiles img{width:100%;aspect-ratio:1.55/1;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+
+/* task flows */
+.ch-card{min-height:0;padding:38px 44px 42px}
+.chapter .ch-card p{max-width:64ch}
+.ch-card .c{font-size:15px}
+.ch-card .ic{width:44px;height:44px;top:34px;right:38px}
+.ch-card h3{margin-top:12px;font-size:clamp(24px,2.6vw,34px);max-width:24ch}
+.ch-card p{font-size:16px;margin-top:16px}
+.rows{margin-top:64px;gap:80px}
+.ph-wrap{justify-self:center;width:min(100%,250px);display:flex;flex-direction:column;align-items:center;gap:16px;margin:0}
+.ph-wrap .ph{width:100%}
+.stepk{font-family:var(--sans);font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#d9601a}
+.note{padding:22px 22px 24px}.note h4{font-size:16px}.note p{font-size:14.5px;margin-top:10px}
+.note .who{font-size:10.5px}
+
+/* P2-style stage (v11) */
+.stage{margin-top:28px;padding:clamp(28px,4vw,48px) clamp(16px,3vw,36px);border-radius:24px;display:grid;gap:52px 22px;
+ background:radial-gradient(70% 50% at 50% 0%,rgba(255,138,61,.12),rgba(254,58,166,.05) 45%,transparent 75%),#f6f1ec}
+.stage--3{grid-template-columns:repeat(3,minmax(0,1fr))}.stage--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.shot{min-width:0;text-align:center}
+.shot .phone{width:min(100%,212px);margin-inline:auto;padding:6px;border-radius:30px;background:#0f1116;box-shadow:0 22px 40px -18px rgba(120,50,20,.45),0 2px 6px rgba(40,20,10,.12)}
+.shot .phone img{width:100%;border-radius:24px}
+.shot figcaption{margin-top:18px;display:grid;gap:5px;justify-items:center}
+.shot b{font-family:var(--sans);font-size:16px;font-weight:600;line-height:1.3;color:#121218}
+.shot .cap{max-width:30ch;color:var(--body);font-size:14px;line-height:1.55}
+.shot .who{margin-top:6px;display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid rgba(230,110,40,.5);color:#b4521a;background:#fff4ec}
+
+/* prototype */
+a.cover{text-decoration:none;text-align:center}
+.pframe{min-height:460px}
+.pframe .cover{position:absolute;inset:0}
+.newtab{display:inline-flex;gap:8px;align-items:center;margin-top:20px;padding:10px 18px;border-radius:999px;border:1px solid var(--box);background:#fff;font-size:15px;text-decoration:none;color:var(--ink)}
+.newtab:hover{border-color:#d9601a;color:#d9601a}
+.foot{border-top:1px solid var(--rule);margin-top:120px;padding:28px 0 48px;font-size:14px;color:var(--muted)}
+
+@media (max-width:1000px){
+ .sec-head,.split{grid-template-columns:1fr;gap:24px}
+ .ide{grid-template-columns:1fr 230px}.ide .anno{grid-column:1/-1}
+ .layer{grid-template-columns:1fr}
+ .pflow{grid-template-columns:1fr}.pflow i{transform:rotate(90deg);justify-self:center}
+ .stage--4{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .serp{height:auto;display:grid;gap:10px}.res{position:static;width:auto!important}
+ .mcards{gap:24px}
+}
+@media (max-width:640px){
+ .wrap,.wide{padding:0 20px}
+ .mcards,.tiles,.ide{grid-template-columns:1fr}.mphone{margin:0 auto}
+ .stage--3,.stage--4{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 14px}.shot .phone{width:min(100%,170px)}
+ .why{grid-template-columns:1fr;gap:8px}
+ .syn{font-size:13.5px}.syn td,.syn th{padding:12px}
+ .ph-wrap{width:min(78%,260px)}
+}
+.ideimg{margin-top:44px}.ideimg img{width:100%}
+.lcimg{width:100%;max-width:330px;border-radius:24px}
+</style>
+<style>
+/* back to the portfolio: a small pill fixed at the top left */
+.back{position:fixed;top:max(14px,calc(env(safe-area-inset-top,0px) + 10px));left:max(14px,calc(env(safe-area-inset-left,0px) + 10px));z-index:50;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(18,18,24,.08);color:var(--ink);font:500 14px/1 var(--sans);text-decoration:none;transition:background-color .2s,border-color .2s}
+.back:hover{background:#fff;border-color:var(--box)}
+.back svg{width:16px;height:16px;transition:transform .25s}
+.back:hover svg{transform:translateX(-2px)}
+/* banner mockup: Neo on a phone, held in the empty space beside the title; the band's bottom edge crops the hand */
+.title-band .mock{position:absolute;z-index:1;top:44px;bottom:0;right:max(16px,calc(50% - 540px));width:clamp(250px,26vw,390px);overflow:hidden;pointer-events:none}
+.title-band .mock img{width:100%;height:auto;animation:mockIn 1s cubic-bezier(.2,.8,.2,1) both .15s}
+@keyframes mockIn{from{opacity:0;transform:translateY(28px)}}
+@media (min-width:761px){.title-band{min-height:calc(44px + clamp(250px,26vw,390px) * .985 + 56px)}}
+@media (max-width:760px){
+ .title-band{padding-bottom:0;display:flex;flex-direction:column}
+ .title-band .mock{order:2}
+ .title-band .mock{position:relative;top:auto;right:auto;bottom:auto;width:min(74vw,320px);height:calc(min(74vw,320px) * 1.02);margin:44px auto 0}
+}
+</style>
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../images/favicon-192.png">
+<link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+<style>
+/* back to portfolio: a smaller black pill, the same on every case study */
+a.back{height:32px!important;gap:6px!important;padding:0 13px 0 10px!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:999px!important;background:#121218!important;color:#fff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:0 6px 16px rgba(18,18,24,.22)!important;font-size:13px!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important}
+a.back:hover{background:#2b2b33!important;border-color:rgba(255,255,255,.24)!important;color:#fff!important}
+a.back svg{width:14px!important;height:14px!important}
+</style>
+</head>
+<body class="no-js">
+<a class="back" href="../index.html#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to home</a>
+
+<div class="grid-bg" aria-hidden="true"><div><i></i><i></i><i></i><i></i></div></div>
+
+<header class="hero" style="padding-top:0">
+ <div class="title-band"><div class="glow"></div><div class="mock"><img src="img/neo-hand.webp" width="820" height="1121" alt="Neo on an iPhone, confirming three placed orders and drafting an update for The Weekend Crew"></div><div class="wrap"><p class="kick">Harsh Dhokte · Case study</p><h1 style="margin-top:22px"><span>Neo,</span><span>a personal</span><span class="g">commerce agent</span></h1></div></div>
+ <div class="wrap rule"></div>
+ <div class="wrap">
+  <dl class="meta">
+   <div><dt>Role</dt><dd>UX research, interaction and UI design</dd></div>
+   <div><dt>Project</dt><dd>UED Project 4 · Symbiosis Institute of Design</dd></div>
+   <div><dt>Focus</dt><dd>Neo's OS-level experience on iOS</dd></div>
+  </dl>
+ </div>
+ <div class="wrap rule"></div>
+</header>
+
+<main>
+<section class="sec" id="scene" data-nav>
+ <div class="wrap">
+  <div class="sec-head">
+   <div class="lab"><p class="kick">01 · Setting the scene</p><h2>A different way of shopping</h2></div>
+   <p class="lead reveal">Imagine telling your shopping assistant what you need, and having it take care of everything, from finding the right products to comparing options and preparing your purchase.</p>
+  </div>
+  <div class="story">
+   <article class="panel reveal"><img src="img/sb1.jpg" alt="A man working late with a sticky note listing seven things for a weekend trek" loading="lazy"><div class="in"><p class="n">01 · Today</p><h4>A packed week, and a weekend trek.</h4><p>Between work and personal commitments, you're stretched for time. Then you realise you need seven things for a trek this weekend.</p></div></article>
+   <article class="panel reveal"><img src="img/sb2.jpg" alt="The man comparing products across Decathlon, Amazon and Myntra, marked time consuming" loading="lazy"><div class="in"><p class="n">02 · Today</p><h4>You'd normally search for each item manually.</h4><p>Browsing websites, comparing options and reading reviews takes time and effort.</p></div></article>
+   <article class="panel next reveal"><img src="img/sb3.jpg" alt="The man asking an agent on his phone to get everything for his Sunday trek" loading="lazy"><div class="in"><p class="n">03 · What's emerging</p><h4>What if you could simply tell an agent?</h4><p>Share what you need, and let the agent find, compare and pick the right products across platforms.</p></div></article>
+   <article class="panel next reveal"><img src="img/sb4.jpg" alt="The man relaxing with a ready trek cart and a Review and Approve button" loading="lazy"><div class="in"><p class="n">04 · What's emerging</p><h4>Review, approve, and get on with your day.</h4><p>The agent handles search, comparison and selection. You review the cart and approve the purchase.</p></div></article>
+  </div>
+  <div class="punch reveal"><p class="q">Sounds futuristic, right?</p><p class="a">It isn't fictional. It's already emerging,<br>and it has a name: <span class="g">Agentic Commerce.</span></p></div>
+
+  <p class="lead reveal" style="margin-top:90px;max-width:40ch">What you're looking at isn't just another way to shop online. It's part of a much bigger shift towards Agentic Commerce.</p>
+  <div class="flows reveal" style="margin-top:40px">
+   <div><p class="k">Traditional e-commerce</p><div class="chips"><div class="chip"><span>Search</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Browse</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Compare</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Decide</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Purchase</span></div></div></div>
+   <div><p class="k">AI-assisted commerce</p><div class="chips"><div class="chip"><span>Ask AI</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Receive recommendations</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Compare</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Human decides</span></div></div></div>
+   <div class="ag"><p class="k">Agentic commerce</p><div class="chips"><div class="chip"><span>Express intent</span><small>Intent</small></div><i aria-hidden="true">⟶</i><div class="chip"><span>Agentic AI</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Entire market</span><small>Surf</small></div><i aria-hidden="true">⟶</i><div class="chip"><span>Best options</span></div><i aria-hidden="true">⟶</i><div class="chip"><span>Purchase</span><small>Delegate</small></div><i aria-hidden="true">⟶</i><div class="chip"><span>Handling post-purchase</span></div></div></div>
+  </div>
+  <div class="why reveal"><h4>Why this matters?</h4><div><p>The user may no longer interact with every step of the shopping journey. The key UX question becomes how humans and agents divide decisions and actions.</p><a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-agentic-commerce-opportunity-how-ai-agents-are-ushering-in-a-new-era-for-consumers-and-merchants" target="_blank" rel="noopener">McKinsey &amp; Company, The Agentic Commerce Opportunity, Oct 2025</a></div></div>
+ </div>
+</section>
+
+<section class="sec" id="built" data-nav>
+ <div class="wrap">
+  <div class="sec-head">
+   <div class="lab"><p class="kick">02 · Already being built</p><h2>And it's already being built</h2></div>
+   <p class="lead reveal">Some of the biggest players in technology and commerce are already laying the groundwork for this shift.</p>
+  </div>
+  <div class="cards c2">
+   <figure class="proto-img reveal"><img src="img/ucp.jpg" alt="Universal Commerce Protocol, an open standard developed by Shopify and Google" loading="lazy"></figure>
+   <figure class="proto-img reveal"><img src="img/acp.jpg" alt="Agentic Commerce Protocol by OpenAI and Stripe, September 2025" loading="lazy"></figure>
+  </div>
+  <p class="srcline">Sources: TechCrunch, Google AP2 (2025)</p>
+  <div class="cards" style="margin-top:22px">
+   <div class="pbox reveal"><p>Agentic protocols record the shopper's consent at every step.</p><div class="pflow"><div class="pst"><span class="t">Shopper signs</span><b>Intent mandate</b><span>Captures the request and its limits, such as price and time.</span></div><i aria-hidden="true">→</i><div class="pst on"><span class="t">Shopper approves</span><b>Cart mandate</b><span>Locks the exact items and price the shopper agreed to pay.</span></div><i aria-hidden="true">→</i><div class="pst"><span class="t">Network receives</span><b>Payment mandate</b><span>Tells the payment network that an agent made the purchase.</span></div></div></div>
+   <div class="pbox reveal"><p>Agents reach merchants through three interaction models.</p><div class="pflow"><div class="pst"><span class="t">Direct</span><b>Agent to site</b><span>The shopper's agent works on a merchant's site the way a person would.</span></div><i aria-hidden="true">→</i><div class="pst on"><span class="t">Agent to agent</span><b>Agent to agent</b><span>The shopper's agent completes the purchase with the merchant's own agent.</span></div><i aria-hidden="true">→</i><div class="pst"><span class="t">Intermediary</span><b>Brokered agent to site</b><span>A platform routes requests between agents and many merchant sites.</span></div></div></div>
+  </div>
+  <p class="body reveal" style="margin-top:26px;max-width:60ch">These protocols are common languages that let agents, merchants and payment systems communicate and complete commerce operations.</p>
+ </div>
+</section>
+
+<section class="sec" id="person" data-nav>
+ <div class="wrap">
+  <h2 class="reveal" style="max-width:20ch;margin-bottom:44px">But every new technology brings new challenges.</h2>
+  <div class="shift reveal">
+   <div class="shift__txt">
+    <p class="kick">The shift in human behaviour</p>
+    <p class="shift__lead">Shopping has always involved human decisions, exploration, personal preferences, habits and control.</p>
+    <p class="shift__q" style="margin-top:auto">But what happens when an AI agent starts taking over some of these activities?</p>
+   </div>
+   <figure class="shift__img"><img src="img/human.webp" width="1100" height="792" alt="Illustration of a young man at his laptop looking up thoughtfully at a glowing AI agent" loading="lazy"></figure>
+  </div>
+  <h3 class="center" style="margin-top:56px">What about the person behind the purchase?</h3>
+  <div class="cards c3" style="margin-top:24px">
+   <div class="qcard reveal"><span class="qn">01</span><p>Would people really want an agent making all these decisions for them?</p></div>
+   <div class="qcard reveal"><span class="qn">02</span><p>Would they trust it with their money, personal information and preferences?</p></div>
+   <div class="qcard reveal"><span class="qn">03</span><p>And if an agent starts acting independently, how would people know what's happening or when to step in?</p></div>
+  </div>
+  <div class="central reveal">
+   <p class="kick">The central question</p>
+   <p class="central__s">The technology might be getting ready for Agentic Commerce. <span class="g">But are people ready to shop this way?</span></p>
+  </div>
+ </div>
+</section>
+
+<section class="sec" id="research" data-nav>
+ <div class="wrap">
+  <p class="kick a">Desk research insights</p>
+  <h2 style="margin-top:14px">What the industry research told me</h2>
+  <p class="lead reveal" style="margin-top:20px;max-width:48ch">To understand this better, I started by looking at what the industry was saying about the future of agentic commerce, and then went a step further to understand how people themselves approached shopping, delegation and trust.</p>
+  <div class="serp reveal" aria-label="Search results and reports on agentic commerce"><div class="res" style="left:0%;top:3%;width:36%"><span class="tag">Preprint</span><p class="ttl">Agentic Commerce: A Survey of How AI Agents Are Reshaping Commerce</p><p>January 2026 · DOI: 10.36227/techrxiv.176972193.39211542/v1 · License: CC BY 4.0</p></div><div class="res" style="left:34%;top:0%;width:38%"><div class="site"><span class="fav">McK</span><div><b>McKinsey &amp; Company</b><small>https://www.mckinsey.com › capabilities › our-insights</small></div></div><a>Agentic commerce: How agents are ushering in a new era</a><p>17 Oct 2025. Agentic commerce, shopping powered by AI agents acting on our behalf, represents a seismic shift in the marketplace.</p></div><div class="res" style="left:62%;top:16%;width:38%"><div class="site"><span class="fav">BC</span><div><b>BigCommerce</b><small>https://www.bigcommerce.com › Articles › Ecommerce</small></div></div><a>Future of Ecommerce (Top Trends for 2026)</a><p>27 May 2026. The future of ecommerce is rife with more automation, AI, and personalization weaving its way through every facet of a customer's journey.</p></div><div class="res" style="left:14%;top:27%;width:41%"><div class="site"><span class="fav">RG</span><div><b>ResearchGate</b><small>https://www.researchgate.net › publication</small></div></div><a>(PDF) Agentic Commerce and the Discoverability Imperative</a><p>25 Jun 2026. This paper assesses the penetration, enabling conditions and likely trajectory of agentic commerce in Sri Lanka through a desk-based synthesis.</p></div><div class="res" style="left:44%;top:44%;width:36%"><div class="site"><span class="fav">EY</span><div><b>EY</b><small>https://www.ey.com › en_gl › insights</small></div></div><a>Will the future of retail be led by humans or AI?</a><p>11 Nov 2025. AI is rapidly transforming store operations, category management, warehousing, logistics and procurement.</p></div><div class="res" style="left:0%;top:58%;width:42%"><div class="site"><span class="fav">JPM</span><div><b>J.P. Morgan</b><small>https://www.jpmorgan.com › Payments Newsroom</small></div></div><a>Agentic Commerce: The Future of AI-Powered Shopping</a><p>2 Feb 2026. Discover how AI agents are transforming digital commerce through agentic shopping, autonomous transactions, and new merchant considerations.</p></div><div class="res" style="left:52%;top:68%;width:42%"><div class="site"><span class="fav">tcs</span><div><b>Tata Consultancy Services</b><small>https://www.tcs.com › services › tcs-interactive</small></div></div><a>Agentic commerce and its role in transforming the future of …</a><p>With personalisation, product discovery, fraud detection, and more, agentic commerce is reimagining retail customer experience and transforming shopping.</p></div></div>
+  <div class="cards c3" style="margin-top:28px">
+   <div class="dcard reveal"><span class="no">01</span><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="6" width="32" height="36" rx="5"/><path d="M16 16h16M16 24h16M16 32h9"/></svg><div class="txt"><h4>AI is becoming a new interface for commerce</h4><p>People already turn to generative AI to discover products, compare alternatives and evaluate purchases.</p><p class="src">McKinsey &amp; Company, 2026</p></div></div>
+   <div class="dcard reveal"><span class="no">02</span><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 34l10-10 7 7 15-15"/><path d="M31 16h9v9"/></svg><div class="txt"><h4>Agents are moving beyond recommendation</h4><p>Agents can increasingly interpret intent, evaluate options and complete transactions on the consumer's behalf.</p><p class="src">Bain &amp; Company; Wang et al., 2026, Alibaba Group</p></div></div>
+   <div class="dcard reveal"><span class="no">03</span><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="17" cy="20" r="7"/><circle cx="33" cy="20" r="7"/><path d="M6 40c2-7 6-10 11-10s9 3 11 10M22 40c2-7 6-10 11-10s9 3 11 10"/></svg><div class="txt"><h4>The relationship layer is the open problem</h4><p>Reports cover the transaction. Far less covers how a person sets boundaries, stays informed and recovers trust.</p><p class="src">McKinsey &amp; Company, 2026</p></div></div>
+  </div>
+  <div class="gapbox reveal"><p class="kick">The research gap</p><p class="l">Existing research explains what agents can do. I wanted to understand where people draw the line between their own decisions and the agent's.</p></div>
+
+  <h2 style="margin-top:110px">Talking to people</h2>
+  <p class="body reveal" style="margin-top:14px;max-width:62ch">I ran a survey to see patterns across many shopping situations, then spoke to eight people one-on-one to understand the motivations and worries behind their answers.</p>
+  <p class="kick a" style="margin-top:44px">Primary research insights</p>
+  <div class="mcards" style="margin-top:22px">
+   <div class="mc reveal"><p class="hd"><b>#01</b>Survey</p><p class="mode">Mode: Google Form survey <a href="https://docs.google.com/forms/d/1IxGJYJR_xAX9uu0JIIbrixgqxN6Jv9PKumQqYug-a6k/edit#responses" target="_blank" rel="noopener">Survey link ↗</a><br>Recipients: <em>38</em></p><h4>Goal</h4><p class="goal">Identify patterns in how people respond to different shopping situations and levels of AI involvement.</p><figure data-zoom><img src="img/survey.jpg" alt="The survey form, The Future of AI Shopping: A 2050 Speculative Research Study" loading="lazy"></figure></div>
+   <div class="mc reveal"><p class="hd"><b>#02</b>Personal interviews</p><p class="mode">Mode: One-on-one interview conversations<br>Recipients: <em>8</em></p><h4>Goal</h4><p class="goal">Understand the motivations, concerns and expectations behind people's delegation choices.</p><figure data-zoom><img src="img/interviews.jpg" alt="Screenshots from video-call interviews and an in-person interview" loading="lazy"></figure></div>
+  </div>
+
+  <div class="split" style="margin-top:110px">
+   <div class="reveal"><p class="kick">Survey insights</p><h3 style="margin-top:14px">So where would people actually let AI take over?</h3><p class="body" style="margin-top:16px">Someone might happily let AI reorder groceries and still want to choose their own clothes or gifts. The line sat at consequence: big financial commitments were the least trusted, everyday essentials the most.</p></div>
+   <div class="cards c2 reveal">
+    <figure class="light" data-zoom><img src="img/chart1.jpg" alt="Bar chart of purchases people would let AI handle alone" loading="lazy"><figcaption><b>Comfortable delegating:</b> everyday groceries at 76.5%.</figcaption></figure>
+    <figure class="light" data-zoom><img src="img/chart2.jpg" alt="Bar chart of purchases people would never let AI make" loading="lazy"><figcaption><b>Never delegate:</b> big financial commitments at 85.3%, gifts at 73.5%.</figcaption></figure>
+   </div>
+  </div>
+
+  <div style="margin-top:110px">
+   <div class="reveal" style="max-width:60ch"><p class="kick">Interview insights</p><h3 style="margin-top:14px">How people actually shop today</h3><p class="body" style="margin-top:16px">Shopping isn't one behaviour. The same person can want help with one purchase and full control over the next.</p></div>
+   <div class="cards c3" style="margin-top:28px">
+    <div class="dcard reveal" style="min-height:0"><h4>Different levels of assistance</h4><p>Some explore and decide alone. Others look for guidance.</p><p class="qlab">"I want to know my options, but I still want to make the final decision."</p></div>
+    <div class="dcard reveal" style="min-height:0"><h4>Discovery or a task</h4><p>For some it's an enjoyable browse. For others, a job to finish.</p><p class="qlab">"I can spend hours looking at new things even when I don't urgently need anything."</p></div>
+    <div class="dcard reveal" style="min-height:0"><h4>The purchase shapes involvement</h4><p>Routine, low-risk buys invite help. Personal or consequential ones pull people back in.</p></div>
+   </div>
+  </div>
+
+  <p class="kick a" style="margin-top:120px">Research synthesis</p>
+  <h2 style="margin-top:14px">Final synthesis: what the research revealed</h2>
+  <div class="reveal" style="overflow-x:auto;margin-top:36px">
+   <table class="syn">
+    <thead><tr><th>Theme</th><th>What emerged across research</th><th>What it means for my research</th></tr></thead>
+    <tbody>
+     <tr><td>Discovery</td><td>People don't shop only when they have a specific need. <em>Browsing, exploring and stumbling upon products</em> are part of the experience.</td><td>Agentic shopping should <em>support discovery</em>, not optimise it away.</td></tr>
+     <tr><td>Trust &amp; Autonomy</td><td>People are comfortable <em>delegating repetitive, low-consequence purchases</em>, but want more involvement as cost, personal importance or consequence increases.</td><td>The agent needs to adapt its level of <em>autonomy to the decision</em>.</td></tr>
+     <tr><td>Transparency</td><td>People want to know <em>why the agent recommended something</em>, what it changed and when it is acting on their behalf.</td><td>Important <em>agent decisions</em> need to be <em>visible and understandable</em>.</td></tr>
+     <tr><td>Personalisation</td><td>Participants valued recommendations that <em>reflected their preferences, habits, needs</em> and <em>context</em> rather than generic suggestions.</td><td><em>Personal context</em> is what makes delegation feel <em>relevant and trustworthy</em>.</td></tr>
+     <tr><td>Human Control</td><td>People <em>want AI to reduce the effort of shopping</em>, but still want the <em>ability to intervene, change a decision</em> or make the final call when something matters.</td><td>Automation should reduce effort <em>without removing ownership</em>.</td></tr>
+    </tbody>
+   </table>
+  </div>
+
+  <div class="sec-head" style="margin-top:120px;margin-bottom:40px">
+   <div class="lab"><p class="kick a">Shopper archetypes</p><h3>These behaviours revealed four kinds of shoppers</h3></div>
+   <p class="body reveal">Each archetype wants a different amount of help from an agent, which meant Neo couldn't treat every purchase the same way.</p>
+  </div>
+  <div class="fan">
+   <div class="cards c4">
+    <div class="dcard reveal"><span class="no">01</span><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><path d="M24 13v11l7 5"/></svg><div class="txt"><h4>The Busy Routine Shopper</h4><p>Time and convenience driven. Shops with a clear need and little time.</p></div></div>
+    <div class="dcard reveal"><span class="no">02</span><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="21" cy="21" r="12"/><path d="M30 30l11 11"/></svg><div class="txt"><h4>The Research-Oriented Buyer</h4><p>Information and confidence driven. Wants evidence the choice is right.</p></div></div>
+    <div class="dcard reveal"><span class="no">03</span><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><path d="M30 18l-4 10-8 4 4-10z"/></svg><div class="txt"><h4>The Discovery-Driven Shopper</h4><p>Exploration and experience driven. Shopping itself is part of the fun.</p></div></div>
+    <div class="dcard reveal"><span class="no">04</span><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6l15 6v11c0 10-7 16-15 19C16 39 9 33 9 23V12z"/><path d="M18 24l5 5 8-9"/></svg><div class="txt"><h4>The Risk-Conscious Buyer</h4><p>Control and reassurance driven. Wants to know why and stay involved.</p></div></div>
+   </div>
+  </div>
+  <div class="cards c3" style="margin-top:20px">
+   <div class="persona reveal"><img src="img/per1.jpg" alt="Amit, persona" loading="lazy"><div class="in"><h4>Amit</h4><p class="r">Tech CEO, 38 · Busy Routine Shopper</p><p>Wants essentials replenished automatically, and to hear from the agent only when something unusual happens.</p><q>"If it's something I buy every month, I don't want to spend time thinking about it."</q></div></div>
+   <div class="persona reveal"><img src="img/per2.jpg" alt="Tanay, persona" loading="lazy"><div class="in"><h4>Tanay</h4><p class="r">Software Engineer, 30 · Research-Oriented Buyer</p><p>Wants personalised comparisons and trustworthy insights filtered from noisy reviews.</p></div></div>
+   <div class="persona reveal"><img src="img/per3.jpg" alt="Maya, persona" loading="lazy"><div class="in"><h4>Maya</h4><p class="r">Social Media Influencer, 26 · Discovery-Driven Shopper</p><p>Wants curated discovery and new brands, without losing the joy of browsing.</p><q>"Help me understand the options faster, but let me make the final decision."</q></div></div>
+  </div>
+ </div>
+</section>
+
+<section class="sec" id="define" data-nav>
+ <div class="wrap">
+  <div class="sec-head">
+   <div class="lab"><p class="kick">03 · Defining the direction</p><h2>From research to design</h2></div>
+   <p class="prob reveal">As people become more time-constrained and e-commerce becomes more autonomous, people may want to spend less time shopping without compromising on the quality, relevance or discovery of their choices. <mark>But as more of the process is delegated to AI, the boundary between what people let AI decide and what they want to discover, evaluate and control themselves starts to blur.</mark></p>
+  </div>
+  <p class="kick reveal">How might we</p>
+  <p class="hmw reveal">How might we design an AI shopping experience that helps people delegate purchasing decisions confidently while keeping them in control of <span class="g">where that boundary sits, what the agent does, and what remains theirs to decide?</span></p>
+  <div class="center reveal" style="margin-top:110px">
+   <svg class="spark" viewBox="0 0 72 72" aria-hidden="true"><defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset=".5" stop-color="#ff8a3d"/><stop offset="1" stop-color="#fe3aa6"/></linearGradient></defs><path fill="url(#wg)" d="M42 10c2 12 6 16 18 18-12 2-16 6-18 18-2-12-6-16-18-18 12-2 16-6 18-18zM18 36c1 6 3 8 9 9-6 1-8 3-9 9-1-6-3-8-9-9 6-1 8-3 9-9zM54 46c.7 4 2 5.3 6 6-4 .7-5.3 2-6 6-.7-4-2-5.3-6-6 4-.7 5.3-2 6-6z"/></svg>
+   <h2 style="max-width:16ch;margin:0 auto">My approach to every design decision</h2>
+  </div>
+  <div class="approach reveal" style="margin-top:48px">
+   <div><span class="n">01</span><p>Understand <b>context and intent</b><span>So a task never starts from scratch.</span></p></div>
+   <div><span class="n">02</span><p>Make every decision <b>transparent</b><span>So people know what Neo did and why.</span></p></div>
+   <div><span class="n">03</span><p>Keep the user in <b>control</b><span>Without oversight becoming a full-time job.</span></p></div>
+   <div><span class="n">04</span><p>Protect the joy of <b>discovery</b><span>So delegation doesn't narrow what people see.</span></p></div>
+  </div>
+  <p class="small" style="margin-top:12px">These four come from the How Might We areas in the original project.</p>
+ </div>
+</section>
+
+<section class="sec" id="visualize" data-nav>
+ <div class="wrap">
+  <p class="kick">04 · Exploring the interaction</p>
+  <h2 style="margin-top:14px;max-width:22ch">An agent works in the background. <span class="g">How do you design for that?</span></h2>
+  <div class="cards c2" style="margin-top:40px">
+   <div class="dd reveal"><p class="kick">Design decision</p><p class="t">If an agent is meant to help across every shopping platform, why should I have to open a separate app to talk to it? That pushed Neo into the phone's system layer, alongside the apps people already use.</p></div>
+   <div class="dd ch reveal"><p class="kick">Design challenge</p><p class="t">But a traditional interface exists because the user does the work. When Neo searches five stores, almost none of that is visible. My job became <b>making the invisible visible</b>, so people could follow Neo without supervising every step.</p></div>
+  </div>
+
+  <p class="kick" style="margin-top:110px">Ideation</p>
+  <h2 style="margin-top:14px">Let's visualise the agent</h2>
+  <figure class="ideimg reveal" data-zoom><img src="img/ideation.jpg" alt="Screen split into 25% behind-the-scenes process, 50% visual outputs and 25% conversation, beside an annotated phone showing the non-intrusive activity layer, Thoughts panel, conversational layer and user input layer" loading="lazy"></figure>
+  <div class="layer">
+   <img class="lcimg reveal" src="img/layercard.jpg" alt="Neo: The Agent Interaction Layer, an interaction system that connects user intent, agent reasoning, contextual outputs and human decisions: invoke, reason, respond, approve" loading="lazy">
+   <p class="say reveal">Neo connects user intent, agent reasoning, contextual outputs and human decisions in one layer.</p>
+  </div>
+  <div class="tiles">
+   <img class="reveal" src="img/tile1.jpg" alt="Neo's active thinking layer: wake up call" loading="lazy">
+   <img class="reveal" src="img/tile2.jpg" alt="Agent activation: easy to invoke, intentional and non-intrusive, triggered with the phone's dedicated AI button" loading="lazy">
+   <img class="reveal" style="object-position:left center" src="img/tile3.jpg" alt="Dynamic Island: real-time agent status while Neo works in the background" loading="lazy">
+  </div>
+ </div>
+</section>
+
+<section class="sec" id="neo" data-nav>
+ <div class="wrap center"><p class="kick">05 · The final experience</p><h2 style="margin-top:14px">Introducing Neo, <span class="g">Agentic Shopping Agent</span></h2></div>
+
+ <article class="chapter" id="task1">
+  <div class="wide"><div class="ch-card reveal"><p class="c">Task flow 1</p><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v22H20l-8 7v-7H8z"/><path d="M15 18h18M15 24h12"/></svg><h3>Ordering snacks for eight from a WhatsApp message</h3><p>Friends are coming over at 9, and Aarav drops a snack list in The Weekend Crew. The user presses the side button, circles his message, and Neo turns it into one order across three quick-commerce stores.</p></div><div class="rows">
+    <div class="row">
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_6_0.jpg" alt="Neo invoked over a WhatsApp group chat with the hint Circle or draw around anything" loading="lazy"></div><figcaption class="stepk">Step 1</figcaption></figure>
+     <div class="note l reveal"><h4>Floating overlay interface:</h4><p>Neo opens as a layer over the chat instead of a separate app, so the user's context stays right where it is.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_step2.jpg" alt="A glowing selection box drawn around Aarav's message" loading="lazy"></div><figcaption class="stepk">Step 2</figcaption></figure>
+     <div class="note l reveal"><h4>Circle to ask:</h4><p>The user draws around one message. Neo reads only that selection, which keeps the scope of what it sees in the user's hands.</p><span class="who">User decides</span></div>
+    </div>
+    <div class="row">
+     <div class="note r c2 reveal" style="grid-column:1"><h4>Editable plan:</h4><p>Neo finds six items for eight people, needed before 9, and shows them as a list the user can edit before any search begins.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_10_5.jpg" alt="Thoughts panel showing a shopping list of chips, nachos, Coke, ice and paper cups, with Go ahead" loading="lazy"></div><figcaption class="stepk">Step 3</figcaption></figure>
+     <div class="note r reveal"><h4>Thoughts panel for transparency:</h4><p>Store logos show exactly where Neo is looking, and a two-line log keeps progress readable instead of becoming a wall of text.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_16_5.jpg" alt="Neo adding items on Blinkit and searching Instamart and Zepto in parallel" loading="lazy"></div><figcaption class="stepk">Step 4</figcaption></figure>
+    </div>
+    <div class="row">
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_21_0.jpg" alt="Order summary grouped by Blinkit, Instamart and Zepto with a total under 1,500 rupees" loading="lazy"></div><figcaption class="stepk">Step 5</figcaption></figure>
+     <div class="note l reveal"><h4>Scalable summary cards:</h4><p>The order is grouped by store with each delivery time, so one card explains three separate orders at a glance.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_28_5.jpg" alt="Universal Cart with pay options and a Slide to pay control" loading="lazy"></div><figcaption class="stepk">Step 6</figcaption></figure>
+     <div class="note l reveal"><h4>One deliberate approval:</h4><p>The Universal Cart names each store as the seller. Slide to pay and Face ID sign the exact cart, so nothing is bought without the user.</p><span class="who">User approves</span></div>
+    </div>
+    <div class="row">
+     <div class="note r reveal" style="grid-column:1"><h4>Live Activity:</h4><p>Once paid, each rider is tracked from the Dynamic Island, and Neo offers to update the group.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_34_5.jpg" alt="Live Activity tracking orders from Zepto, Blinkit and Instamart" loading="lazy"></div><figcaption class="stepk">Step 7</figcaption></figure>
+     <div class="note r reveal"><h4>Asks before remembering:</h4><p>Neo suggests remembering that The Weekend Crew is usually eight people, and saves it only if the user agrees.</p><span class="who">User decides</span></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/draw_39_0.jpg" alt="Neo asking whether to remember that The Weekend Crew is usually 8 people" loading="lazy"></div><figcaption class="stepk">Step 8</figcaption></figure>
+    </div>
+</div></div>
+ </article>
+ <article class="chapter" id="task2">
+  <div class="wide"><div class="ch-card reveal"><p class="c">Task flow 2</p><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M6 38l12-20 8 12 6-8 10 16z"/><circle cx="34" cy="12" r="4"/></svg><h3>Asking out loud for a first trek kit under ₹5,000</h3><p>With nothing on screen to read, the user simply says, "I'm going on my first trek this Sunday. Get me everything I need and keep it under ₹5,000." Neo plans the kit, then takes the long search into the Dynamic Island.</p></div><div class="rows">
+    <div class="row">
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/trek_9_0.jpg" alt="Neo's plan for five trek items with a question about rain gear and a weather source pill" loading="lazy"></div><figcaption class="stepk">Step 1</figcaption></figure>
+     <div class="note l reveal"><h4>Source pills build trust:</h4><p>Neo flags light rain at Rajmachi and shows the forecast as the source, then lets the user keep or skip the rain gear.</p><span class="who">User decides</span></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/trek_13_5.jpg" alt="Neo explaining it will search every store and a Keep using phone button" loading="lazy"></div><figcaption class="stepk">Step 2</figcaption></figure>
+     <div class="note l reveal"><h4>Hand-off to the background:</h4><p>Neo explains what it will check, then offers one action: keep using the phone.</p></div>
+    </div>
+    <div class="row">
+     <div class="note r reveal" style="grid-column:1"><h4>Real-time agent status:</h4><p>The Dynamic Island moves through searching each store, comparing 23 options and checking delivery dates, each in its own colour.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/trek_18_0.jpg" alt="Home screen with the Dynamic Island reading Searching Decathlon" loading="lazy"></div><figcaption class="stepk">Step 3</figcaption></figure>
+     <div class="note r reveal"><h4>Non-intrusive by default:</h4><p>The island expands only when the cart is ready, with Later and Review cart, so Neo never takes over the screen uninvited.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/trek_31_5.jpg" alt="Expanded Dynamic Island: your cart is ready, five items from five stores under budget" loading="lazy"></div><figcaption class="stepk">Step 4</figcaption></figure>
+    </div>
+    <div class="row">
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/trek_34_5.jpg" alt="Universal Cart with a dark decision card about the shoes arriving the night before the trek" loading="lazy"></div><figcaption class="stepk">Step 5</figcaption></figure>
+     <div class="note l reveal"><h4>One decision, surfaced:</h4><p>The shoes arrive at 9 PM the night before a 6 AM start. Neo offers Friday delivery for ₹99 more, and the user picks.</p><span class="who">User decides</span></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/trek_43_5.jpg" alt="Live Activity listing five orders with delivery days" loading="lazy"></div><figcaption class="stepk">Step 6</figcaption></figure>
+     <div class="note l reveal"><h4>Tracking after purchase:</h4><p>Five orders, one Live Activity, each with its delivery day.</p></div>
+    </div>
+</div></div>
+ </article>
+ <article class="chapter" id="task3">
+  <div class="wide"><div class="ch-card reveal"><p class="c">Task flow 3</p><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30l3-10a4 4 0 0 1 4-3h18a4 4 0 0 1 4 3l3 10v8H8z"/><circle cx="15" cy="32" r="2.5"/><circle cx="33" cy="32" r="2.5"/></svg><h3>Booking an airport cab by voice, with a stop for Ajay</h3><p>A meeting runs late before a 7:10 PM flight. The user asks for a cab to the airport at 4:30 with a stop for Ajay. Neo connects the flight time and Ajay's address, books the ride, and offers to tell Ajay.</p></div><div class="rows">
+    <div class="row">
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/cab_9_0.jpg" alt="Neo asking which ride and pickup point, with options pre-selected" loading="lazy"></div><figcaption class="stepk">Step 1</figcaption></figure>
+     <div class="note l reveal"><h4>Visualising the process:</h4><p>The Thoughts panel shows each step, from reading the flight time to comparing Uber, Ola and Rapido. Ride and pickup come pre-selected from memory.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/cab_13_5.jpg" alt="Booking confirmation card for Uber Go with the driver, pickup and a stop at Ajay's home" loading="lazy"></div><figcaption class="stepk">Step 2</figcaption></figure>
+     <div class="note l reveal"><h4>Confirmation &amp; control:</h4><p>The plan arrives as a familiar booking card. The Book button carries the price, and Change the ride stays one tap away.</p><span class="who">User approves</span></div>
+    </div>
+    <div class="row">
+     <div class="note r reveal" style="grid-column:1"><h4>Actionable prompts:</h4><p>The offer to message Ajay is a simple Yes or No, which keeps social actions in the user's hands.</p><span class="who">User decides</span></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/cab_18_0.jpg" alt="Neo asking whether to text Ajay about the pickup, with No and Yes buttons" loading="lazy"></div><figcaption class="stepk">Step 3</figcaption></figure>
+     <div class="note r reveal"><h4>Action in view:</h4><p>WhatsApp opens and the message sends in front of the user, marked "Sent by Neo for you".</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/cab_24_0.jpg" alt="WhatsApp chat with Ajay showing the pickup message sent by Neo and his reply" loading="lazy"></div><figcaption class="stepk">Step 4</figcaption></figure>
+    </div>
+</div></div>
+ </article>
+ <article class="chapter" id="task4">
+  <div class="wide"><div class="ch-card reveal"><p class="c">Task flow 4</p><svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6a12 12 0 0 0-7 22v6h14v-6a12 12 0 0 0-7-22z"/><path d="M19 40h10"/></svg><h3>Neo remembers the speaker Rohan asked for</h3><p>Rohan asked the user to bring a Bluetooth speaker tonight. Neo connects that chat with tonight's plan and offers to handle it, and it explains where the idea came from before doing anything.</p></div><div class="rows">
+    <div class="row">
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/smart_3_0.jpg" alt="Super Suggestion card: Don't forget Rohan's speaker, with Not now and Handle it" loading="lazy"></div><figcaption class="stepk">Step 1</figcaption></figure>
+     <div class="note l reveal"><h4>Non-intrusive notification:</h4><p>The Super Suggestion arrives as a small card with Not now and Handle it, and it doesn't demand immediate action.</p><span class="who">User decides</span></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/smart_7_5.jpg" alt="Where this came from: the calendar event and Rohan's chat message" loading="lazy"></div><figcaption class="stepk">Step 2</figcaption></figure>
+     <div class="note l reveal"><h4>Context snippet for trust:</h4><p>Neo shows the calendar event and Rohan's exact message, so the user can see why Neo is suggesting this.</p></div>
+    </div>
+    <div class="row">
+     <div class="note r reveal" style="grid-column:1"><h4>Three clear options:</h4><p>Recommended, cheapest and fastest speakers, all arriving before 9 and under ₹2,000.</p></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="scr/smart_15_0.jpg" alt="Three speaker options labelled Recommended, Cheapest and Fastest" loading="lazy"></div><figcaption class="stepk">Step 3</figcaption></figure>
+     <div class="note r reveal"><h4>Memory you can see and edit:</h4><p>Every item shows how Neo learned it: <b>I observed</b>, <b>I inferred</b> or <b>You told me</b>. Inferred items wait for Save, Edit or Don't save.</p><span class="who">User decides</span></div>
+     <figure class="ph-wrap reveal"><div class="ph"><img src="img/mem_open.jpg" alt="Neo Memory screen with an inferred item waiting for approval, with Save, Edit and Don't save" loading="lazy"></div><figcaption class="stepk">Step 4</figcaption></figure>
+    </div>
+</div></div>
+ </article>
+
+ <div class="wrap">
+  <div class="proto" id="prototype">
+   <div class="sec-head" style="margin-bottom:0">
+    <div class="lab"><p class="kick">The coded prototype</p><h2>Try Neo <span class="g">yourself</span></h2></div>
+    <p class="body reveal">I built the outside-app experience as a working HTML prototype on an iPhone frame, so the interaction could be felt rather than described. Pick a flow, press the side button, and Neo takes it from there.</p>
+   </div>
+   <div class="pframe reveal"><a class="cover" href="prototype/index.html" target="_blank" rel="noopener"><div><span>▶ Launch the prototype</span><small>Opens in a new tab. Best on a laptop. Each flow resets the phone.</small></div></a></div>
+   <div class="try">
+    <div><b>Hands-free trek kit</b><p>Watch the Dynamic Island carry a long search.</p></div>
+    <div><b>Circle to ask</b><p>Draw around a WhatsApp message.</p></div>
+    <div><b>Just ask, by voice</b><p>Answers come pre-filled from memory.</p></div>
+    <div><b>Urgent cab</b><p>See Neo ask before messaging anyone.</p></div>
+    <div><b>Super Suggestion</b><p>See where a suggestion came from.</p></div>
+   </div>
+   <a class="newtab" href="prototype/index.html" target="_blank" rel="noopener">Open in a new tab ↗</a>
+   <p class="small" style="margin-top:16px;max-width:70ch">The interface, transitions, Dynamic Island, Thoughts panel, cart and approval steps are built and interactive. Store searches, prices, payments and messages are scripted. Voice input works in Chrome or Edge.</p>
+  </div>
+ </div>
+</section>
+</main>
+<footer class="foot"><div class="wrap">Harsh Dhokte · Neo, UED Project 4 · Symbiosis Institute of Design</div></footer>
+<div class="zoom" id="zoom" role="dialog" aria-label="Enlarged image"><img alt=""></div>
+<script>
+(function(){
+ document.body.classList.remove('no-js');
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.1});
+ document.querySelectorAll('.reveal').forEach(el=>reduce?el.classList.add('in'):ro.observe(el));
+ const z=document.getElementById('zoom'),zi=z.querySelector('img');
+ document.querySelectorAll('[data-zoom] img,[data-zoomimg]').forEach(i=>{const t=i.closest('[data-zoom]')||i;t.style.cursor='zoom-in';t.addEventListener('click',()=>{zi.src=i.src;zi.alt=i.alt;z.classList.add('on')})});
+ z.addEventListener('click',()=>z.classList.remove('on'));document.addEventListener('keydown',e=>{if(e.key==='Escape')z.classList.remove('on')});
+})();
+</script>
+</body>
+</html>
